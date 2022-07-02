@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AccountBankController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Register\RegisterController;
 
 /*
@@ -16,7 +17,7 @@ use App\Http\Controllers\Register\RegisterController;
 |
 */
 
-//Inscrire un utilisateur
+//Inscription des utilisateurs
 Route::prefix('/register')->controller(RegisterController::class)->group(function () {
 
     Route::post('/first-step', 'firstStep');
@@ -26,10 +27,16 @@ Route::prefix('/register')->controller(RegisterController::class)->group(functio
 
 });
 
-//connecter un utilisateur
+//Route liée a la connexion de l'utilisateur
 Route::post('/login', [LoginController::class, 'login'], 'login');
 
+//route liée aux comptes bancaires
+Route::middleware('auth:sanctum')->prefix('/bank')->controller(AccountBankController::class)->group(function () {
+    Route::post('/activate', 'activate');
+    Route::post('/desactivate', 'desactivate');
+});
 
+//profile
 Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
     return $request->user();
 });

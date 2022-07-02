@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('nom');
             $table->string('prenom');
-            $table->string('nin')->nullable();
+            $table->string('nin')->nullable()->unique();
             $table->dateTime('date_naissance');
             $table->string('type')->default('particulier');
             $table->string('telephone')->unique();

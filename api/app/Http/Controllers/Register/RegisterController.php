@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Register;
 
 use App\Models\User;
+use App\Models\Compte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\Session\Session;
 
 class RegisterController extends Controller {
+
+
+    public function __construct(private Request $request, private Compte $compte){}
 
     /**
      * firstStep enregistre les informations pérsonnelles 
@@ -88,6 +92,7 @@ class RegisterController extends Controller {
     /**
      * fourthStep Confirmer le mot de passe 
      * inscrir l'utisateur dans la base de données
+     * créer également son compte bancaire
      *
      * @param  Request $request
      * @return void
@@ -165,6 +170,15 @@ class RegisterController extends Controller {
         }, []);
         
         $user = User::create($values);
-        return $user instanceof User;
+
+        $compte = new Compte();
+        $compte->type = $user->type;
+        $compte->user()->associate($user);
+
+        if ($compte->save()) {
+            return $user instanceof User;
+        }
+
+        return false;
     }
 }
