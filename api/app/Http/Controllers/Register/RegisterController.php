@@ -7,6 +7,7 @@ use App\Models\Compte;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Region;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Session\Session;
 
@@ -58,7 +59,11 @@ class RegisterController extends Controller {
                 ]
             ], 401);
         }
-        
+
+        if (is_null(Region::where('id', $credentials['region_id'])->first())) {
+            return response()->json(['error' => __('validation.not_in', ['attribute' => 'region'])], 404);
+        }
+
         if (!$this->saveStep($request->session(), $credentials, 2)) {
             return response()->json(['message' => __('message.step_indefined')], 401);
         }

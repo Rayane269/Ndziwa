@@ -50,11 +50,11 @@ class User extends Authenticatable
         return $this->belongsTo(Region::class);
     }
 
-    public function roles() {
-        return $this->belongsToMany(Role::class);
-    }
-
     public function compte() {
         return $this->hasOne(Compte::class);
+    }
+
+    public function operations() {
+        return $this->hasMany(Operation::class);
     }
 }

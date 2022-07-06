@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Register\RegisterController;
+use App\Http\Controllers\Transaction\DepotController;
+use App\Http\Controllers\Transaction\RetraitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,11 @@ Route::post('/login', [LoginController::class, 'login'], 'login');
 Route::middleware('auth:sanctum')->prefix('/bank')->controller(AccountBankController::class)->group(function () {
     Route::post('/activate', 'activate');
     Route::post('/desactivate', 'desactivate');
+});
+
+Route::middleware('auth:sanctum')->prefix('/transaction/')->group(function () {
+    Route::post('deposit', [DepotController::class, 'deposite']);
+    Route::post('withdrawal', [RetraitController::class, 'withDrawal']);
 });
 
 //profile

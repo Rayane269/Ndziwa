@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Compte;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\Builder;
 
 class AccountBankController extends Controller {
         
@@ -27,8 +24,8 @@ class AccountBankController extends Controller {
         }
         
         if (is_null($user->nin)) {
-            $fields = $request->validate(['nin' => ['required']]);
-            if (User::where('nin', $fields['nin'])) {
+            $fields = $request->validate(['nin' => ['required', 'min:9']]);
+            if (User::where('nin', $fields['nin'])->first()) {
                 return response()->json(['message' => __('validation.unique', ['attribute' => 'NIN'])], 406);
             } 
             $user->nin = $fields['nin'];

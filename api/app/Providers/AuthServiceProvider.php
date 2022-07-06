@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Compte;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -27,8 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('activate-account', function (User $user, Compte $compte) {
-            return $user->id === $compte->user_id;
-        });
+        Gate::define(
+            'transaction-argent', 
+            fn (User $user) => in_array('ROLE_ADMIN', json_decode($user->roles))
+        );
     }
 }

@@ -14,7 +14,10 @@ class Compte extends Model
     ];
 
     public function user() {
-
         return $this->belongsTo(User::class);
+    }
+
+    public function operations() {
+        return $this->hasMany(Operation::class);
     }
 }
