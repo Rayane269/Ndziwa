@@ -20,7 +20,7 @@ class LoginController extends Controller {
     {
         $credentials = $request->validate([
             'telephone' => ['required'],
-            'password' => [],
+            'password' => ['required'],
         ]);
         
         if (Auth::attempt($credentials)) {
@@ -29,7 +29,7 @@ class LoginController extends Controller {
         }
 
         return response()->json([
-            'error' => __('auth.failed')
+            'errors' => __('auth.failed')
         ], 401);
     }
 }
