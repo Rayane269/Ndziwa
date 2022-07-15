@@ -23,13 +23,33 @@ export const useAuth = () => {
                 method: 'POST',
                 body: data
             })
-			setState(s => ({ ...s, user: response, error: {} }))
+			setState(s => ({ ...s, user: response, loading: false, error: {} }))
 			return response
 
         } catch (e) {
 
             if (e instanceof ApiError) {
-				setState(s => ({ ...s, user: {}, error: e.data}))
+				setState(s => ({ ...s, user: {}, error: e.data, loading: false}))
+            }
+        }
+
+        //setState(s => ({ ...s, loading: false }))
+
+    }, [])
+
+    const logout = useCallback( async () => {
+        
+        setState(s => ({ ...s, loading: true }))
+        try {
+            const response = await jsonFetch(`${BASE_URL}/api/logout`, {
+                method: "POST"
+            })
+
+            return response
+
+        } catch(e) {
+            if (e instanceof ApiError) {
+                setState(s => ({ ...s, error: e.data, loading: false }))
             }
         }
 
@@ -37,9 +57,8 @@ export const useAuth = () => {
 
     }, [])
 
-    return { ...state, login }
+    return { ...state, login, logout }
 }
-
 
 /**
  * Vérifie si l'utilisateur est connecté
@@ -49,7 +68,7 @@ export const useAuth = () => {
 export function isAuthenticated () {
 	const [state, setState] = useState({
        authenticated: false,
-       loadingIsAuthenticate: false 
+       loadingIsAuthenticate: false
     })
     const url = `${BASE_URL}/api/me`
     const params = {method: "GET"}
@@ -61,17 +80,21 @@ export function isAuthenticated () {
         setState(s => ({ ...s, loadingIsAuthenticate: true }))
         try {
             const response = await jsonFetch(url, params)
-            setState(s => ({ ...s, loadingIsAuthenticate: false, authenticated: true }))
+            setState(s => ({ ...s, authenticated: true }))
         } catch(e) {
             if (e instanceof ApiError) {
-                setState(s => ({ ...s, loadingIsAuthenticate: false, authenticated: false }))
+                setState(s => ({ ...s, authenticated: false }))
             }
         }
+
+        setState(s => ({ ...s, loadingIsAuthenticate: false }))
+
 
     }, [])
 
     return { ...state, is }
 }
+
 
 /**
  * Vérifie si l'utilisateur est connecté

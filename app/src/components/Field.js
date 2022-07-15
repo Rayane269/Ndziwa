@@ -100,7 +100,7 @@ const TextField = ({type="text", children}) => {
  const TextFieldContext = ({context, name, type="text", errors, helper=null, children}) => {
     const data = useContext(context)
     const handleChange = useCallback((name, value) => {
-        if (errors !== null) {
+        if (errors != null) {
             errors[name] = null
         }
         data.change(name, value)
@@ -135,7 +135,7 @@ const TextField = ({type="text", children}) => {
 const TelFieldContext = ({context, name, country, errors=null, helper, children}) => {
     const data = useContext(context)
     const handleChange = useCallback((name, value) => {
-        if (errors !== null) {
+        if (errors != null) {
             errors[name] = null
         }
         data.change(name, value)
@@ -301,7 +301,7 @@ const SmsVerify = ({errors=null, onSubmit}) => {
                 </View>
             </View>
             <View style={{paddingHorizontal: 10, marginBottom: SIZES.padding * 1.4}}>
-                <Text style={{color: COLORS.black, marginRight: 10, fontSize: SIZES.padding * 1.5}}>N'avez vous pas recu de code ? </Text>
+                <Text style={{color: COLORS.black, marginRight: 10, fontSize: SIZES.padding * 1.5}}>N'avez vous pas reçu de code ? </Text>
                 <TouchableOpacity>
                     <Text style={{color: COLORS.green, fontSize: SIZES.padding * 1.5, marginTop: 6}}>Renvoyer le code</Text>
                 </TouchableOpacity>
@@ -365,7 +365,7 @@ const SelectField = ({children, onClick, name, errors, helper}) => {
     const [showPassword, setShowPassword] = useState(true)
     const data = useContext(context)
     const handleChange = useCallback((name, value) => {
-        if (errors !== null) {
+        if (errors != null) {
             errors[name] = null
         }
         data.change(name, value)
@@ -487,6 +487,7 @@ const styles = StyleSheet.create({
         padding: 0,
         paddingHorizontal: 18,
         paddingVertical: 10,
+        color: COLORS.black
 
 
     }

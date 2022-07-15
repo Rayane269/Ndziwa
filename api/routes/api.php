@@ -30,9 +30,14 @@ Route::prefix('/register')->controller(RegisterController::class)->group(functio
 
 });
 
-//Route liée a la connexion de l'utilisateur
+//Route liée a l'authentification de l'utilisateur
 Route::post('/login', [LoginController::class, 'login'], 'login');
+Route::post('/logout', [LoginController::class, 'logout']);
+
+
 Route::get('/regions', [RegionController::class, 'index'], 'regions');
+
+
 //route liée aux comptes bancaires
 Route::middleware('auth:sanctum')->prefix('/bank')->controller(AccountBankController::class)->group(function () {
     Route::post('/activate', 'activate');

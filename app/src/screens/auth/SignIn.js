@@ -92,21 +92,24 @@ const SignIn = ({navigation}) => {
     
     //const $response = isAuthenticated();
     useEffect(() => {
-       is()
+        is()
+    }, [])
+
+    useEffect(() => {
        if (authenticated) {
             navigation.navigate('home')
         }
     }, [authenticated])
-
-    console.log(authenticated, loadingIsAuthenticate)
     
-
+    console.log(loading, loadingIsAuthenticate)    
     return (
         <KeyboardAvoidingView 
             behavior={Platform.OS === "ios" ? "padding" : null}
             style={{ flex: 1 }}
         >
-            <Spinner visible={!loadingIsAuthenticate} />
+            {loadingIsAuthenticate &&
+                <Spinner visible={true} />
+            }
             {!authenticated && !loadingIsAuthenticate &&
                 <LinearGradient 
                     start={{x: 0.15, y: .2}} end={{x: 0.24, y: .0}}

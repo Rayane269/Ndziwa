@@ -5,8 +5,6 @@ import {
     Text, 
     View,
     ScrollView,
-    TouchableOpacity,
-    Image,
     ActivityIndicator,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -36,7 +34,7 @@ const FourthStep = ({navigation}) => {
                         justifyContent: "center",
                         color: COLORS.black, ...FONTS.h1
                     }}>Mot de passe</Text>
-                    <Text style={{marginTop: SIZES.padding * 3, fontSize: SIZES.padding * 1.5}}>
+                    <Text style={{color: COLORS.black, marginTop: SIZES.padding * 2, fontSize: SIZES.padding * 1.5}}>
                         Pour plus de sécurité, définissez un mot de passe sûr, complexe et long à votre compte.
                     </Text>
                 </View>
@@ -78,7 +76,7 @@ const FourthStep = ({navigation}) => {
                             errors={errors.errors || ''}
                             name="password" 
                             type="default" 
-                            helper="* Votre mot de passe doit faire plus de 8 caractéres, avec un majuscule et un chiffre"
+                            helper="* Votre mot de passe doit faire plus de 8 caractéres, avec au moins une majuscule et un chiffre"
                         >
                             Mot de passe
                         </PasswordFieldContext>

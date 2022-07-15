@@ -59,7 +59,7 @@ const FirstStep = ({navigation}) => {
             </FormContext>
         )
     }
-    console.log(data, errors, loading)
+    
     const handleSubmit = useCallback(async (value) => {
         setValue(v => ({ ...v, nom: value.nom, prenom: value.prenom}))
         const response = await fetch(null, {
@@ -117,7 +117,8 @@ const FirstStep = ({navigation}) => {
                             <TouchableOpacity onPress={() => navigation.navigate('connexion')}>
                                 <Text style={{
                                     fontSize: SIZES.padding * 1.4,
-                                    textDecorationLine: "underline"
+                                    textDecorationLine: "underline",
+                                    color: COLORS.gray
                                 }}>J'ai déja un compte ?</Text>
                             </TouchableOpacity>
                             <ButtonSubmitContext 

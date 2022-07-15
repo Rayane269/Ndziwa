@@ -7,7 +7,10 @@ import { ButtonSubmitContext, SmsVerify } from "../../components/Field"
 import { useJsonFetch } from "../../functions/hooks"
 import { BASE_URL } from "../../config"
 import { LastLink } from "../../components/Utils"
+
+
 const ThirdStep = ({navigation}) => {
+
     const { data, loading, errors, fetch } = useJsonFetch(`${BASE_URL}/api/register/third-step`)
     const FormCreateContext = createContext({})
 
@@ -15,10 +18,12 @@ const ThirdStep = ({navigation}) => {
         
         return (
             <FormContext context={FormCreateContext} defaultValue={defaultValue}>
-                <Text style={{...FONTS.h3, color: COLORS.black}}>
-                    Entrez le code qui vient de vous être envoyé
-                </Text>
-                {children}
+                <View style={{marginBottom: 20}}>
+                    <Text style={{...FONTS.h3, color: COLORS.black}}>
+                        Entrez le code qui vient de vous être envoyé
+                    </Text>
+                    {children}
+                </View>
             </FormContext>
         )
     })
@@ -34,7 +39,6 @@ const ThirdStep = ({navigation}) => {
             navigation.navigate("inscription_step_4")
         }
     })
-    console.log(errors)
 
     return (
         <KeyboardAvoidingView

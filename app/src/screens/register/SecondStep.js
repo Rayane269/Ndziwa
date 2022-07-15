@@ -81,7 +81,7 @@ const SecondStep = ({navigation}) => {
                             marginRight: 10
                         }}
                     />
-                    <Text style={{...FONTS.body4}}>{item.nom}</Text>
+                    <Text style={{...FONTS.body4, color: COLORS.black}}>{item.nom}</Text>
                 </TouchableOpacity>
             )
         } 
@@ -104,7 +104,7 @@ const SecondStep = ({navigation}) => {
                         style={{
                             height: 380,
                             width: SIZES.width * 0.92,
-                            backgroundColor: COLORS.lightGreen,
+                            backgroundColor: COLORS.lightGray,
                             borderRadius: SIZES.radius
                         }}
                     >

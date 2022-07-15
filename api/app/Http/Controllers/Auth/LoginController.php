@@ -16,6 +16,7 @@ class LoginController extends Controller {
      * @return Response
      */    
 
+     
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -31,5 +32,18 @@ class LoginController extends Controller {
         return response()->json([
             'errors' => __('auth.failed')
         ], 401);
+    }
+    
+    /**
+     * logout déconnecter une session
+     *
+     * @param  Request $request
+     * @return void
+     */
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return response()->json(["message" => "deconnecté"], 201);
     }
 }
