@@ -16,9 +16,23 @@ class RegionFactory extends Factory
      */
     public function definition()
     {
-        return [
+        return 
+        [
             'nom' => 'Comores',
-            'code' => '+269'
-        ];
+            'code' => 'km',
+            'code_appel' => '+269',
+            'devise' => 'KMF',
+            'timezone' => 'UTC+03:00'
+        ]
+        /*
+        [
+            'nom' => 'France',
+            'code' => 'fr',
+            'code_appel' => '+33',
+            'devise' => '€',
+            'timezone' => null
+        ]
+        **/
+        ;
     }
 }

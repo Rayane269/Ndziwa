@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountBankController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Register\RegisterController;
 use App\Http\Controllers\Transaction\DepotController;
 use App\Http\Controllers\Transaction\RetraitController;
@@ -31,7 +32,7 @@ Route::prefix('/register')->controller(RegisterController::class)->group(functio
 
 //Route liée a la connexion de l'utilisateur
 Route::post('/login', [LoginController::class, 'login'], 'login');
-
+Route::get('/regions', [RegionController::class, 'index'], 'regions');
 //route liée aux comptes bancaires
 Route::middleware('auth:sanctum')->prefix('/bank')->controller(AccountBankController::class)->group(function () {
     Route::post('/activate', 'activate');

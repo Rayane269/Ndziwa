@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { BASE_URL } from "../config"
 import { ApiError, jsonFetch } from "./api"
+import { useJsonFetch } from "./hooks"
 
 /**
  * Connecter un utilisateurs
@@ -43,10 +44,33 @@ export const useAuth = () => {
 /**
  * Vérifie si l'utilisateur est connecté
  *
- * @return {boolean}
+ * @return {Object}
  */
 export function isAuthenticated () {
-	
+	const [state, setState] = useState({
+       authenticated: false,
+       loadingIsAuthenticate: false 
+    })
+    const url = `${BASE_URL}/api/me`
+    const params = {method: "GET"}
+    
+    /**
+     * @return {boolean}
+     */
+    const is = useCallback(async () => {
+        setState(s => ({ ...s, loadingIsAuthenticate: true }))
+        try {
+            const response = await jsonFetch(url, params)
+            setState(s => ({ ...s, loadingIsAuthenticate: false, authenticated: true }))
+        } catch(e) {
+            if (e instanceof ApiError) {
+                setState(s => ({ ...s, loadingIsAuthenticate: false, authenticated: false }))
+            }
+        }
+
+    }, [])
+
+    return { ...state, is }
 }
 
 /**
@@ -59,11 +83,11 @@ export function lastNotificationRead () {
 }
 
 /**
- * Renvoie l'id de l'utilisateur
+ * Renvoie l'utilisateur
  *
- * @return {number|null}
+ * @return {Object}
  */
-export function getUserId () {
+export function getUser () {
 	
 }
 

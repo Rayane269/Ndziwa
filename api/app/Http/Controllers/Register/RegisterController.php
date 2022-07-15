@@ -10,9 +10,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Region;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Gate;
 
 class RegisterController extends Controller {
 
+    const KEY_ONE = "register.";
+    const KEY_TWO = "steps.";
 
     public function __construct(private Request $request, private Compte $compte){}
 
@@ -28,10 +31,9 @@ class RegisterController extends Controller {
         $credentials = $request->validate([
             'nom' => ['required'],
             'prenom' => ['required'],
-            'date_naissance' => ['required'],
         ]);
         
-        $this->saveStep($request->session(), $credentials, 1);
+        $this->saveStep($credentials, 1);
         return response()->json(['message' => __('message.success')], 201);
     } 
     
@@ -43,7 +45,6 @@ class RegisterController extends Controller {
      * @return Response
      */
     public function secondStep(Request $request) {
-
         $credentials = $request->validate([
             'region_id' => ['required'],
             'telephone' => ['required']
@@ -64,7 +65,7 @@ class RegisterController extends Controller {
             return response()->json(['error' => __('validation.not_in', ['attribute' => 'region'])], 404);
         }
 
-        if (!$this->saveStep($request->session(), $credentials, 2)) {
+        if (!$this->saveStep($credentials, 2)) {
             return response()->json(['message' => __('message.step_indefined')], 401);
         }
         return response()->json(['message' => __('message.success')], 201);
@@ -79,14 +80,16 @@ class RegisterController extends Controller {
     public function thirdStep(Request $request) {
 
         $credentials = $request->validate([
-            'first' => ['required', 'max:1'],
-            'second' => ['required', 'max:1'],
-            'third' => ['required', 'max:1'],
-            'quatre' => ['required', 'max:1']
+            'code' => ['required']
         ]);
 
-        //$code = (int) $credentials['first'] . $credentials['second'] . $credentials['third'] . $credentials['quatre'];
-        if (!$this->saveStep($request->session(), ['telephone_verified_at' => now()], 3)) {
+        $code = (int) $credentials['code'];
+
+        if ($code !== 1234) {
+            return response()->json(['errors' => 'code de verification incorrect'], 400);
+        }
+
+        if (!$this->saveStep(['telephone_verified_at' => now()], 3)) {
             return response()->json(['message' => __('message.step_indefined')], 401);
         }
 
@@ -105,7 +108,7 @@ class RegisterController extends Controller {
     public function fourthStep(Request $request) {
         
         $credentials = $request->validate([
-            'password' => ['required'],
+            'password' => ['required', 'min:8'],
             'confirm_password' => ['required']
         ]);
         
@@ -118,11 +121,7 @@ class RegisterController extends Controller {
         }
 
         $session = $request->session();
-        $step = $this->saveStep(
-            $session, 
-            ['password' => Hash::make($credentials['password'])], 
-            4
-        );
+        $step = $this->saveStep(['password' => Hash::make($credentials['password'])], 4);
 
         if (!$step) {
             return response()->json(['message' => __('message.step_indefined')], 401);
@@ -144,21 +143,21 @@ class RegisterController extends Controller {
      * @param  string $step
      * @return bool
      */
-    private function saveStep(Session $session, array $data, int $step) {
-        $key = "register.steps.$step";
-        $count = 'register.count';
+    private function saveStep(array $data, int $step) {
+        $session = $this->request->session();
         
-        if ($step > 1 and $step - 1 !== $session->get($count)) {
-            return false;
+        $session->put(self::KEY_ONE . "lastStep", $step - 1);        
+        if ($step > 1) {
+            if (!Gate::allows('next-step', $session)) {
+                return false;
+            }
         }
+        $key = self::KEY_ONE . self::KEY_TWO . $step;
         
         if (!$session->exists($key)) {
             $session->put($key, $data);
-            if ($step !== 4) {
-                $session->increment($count);
-            } 
         }
-
+        
         return true;
     }
     

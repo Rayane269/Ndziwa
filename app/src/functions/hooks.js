@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { ApiError, jsonFetch } from "./api"
 
 
@@ -15,8 +15,8 @@ import { ApiError, jsonFetch } from "./api"
 
     const [state, setState] = useState({
       loading: false,
-      data: null,
-      errors: null
+      data: {},
+      errors: {}
     })
 
     const fetch = useCallback( async (localUrl, localParams) => {
@@ -26,13 +26,13 @@ import { ApiError, jsonFetch } from "./api"
         try {
 
           const response = await jsonFetch(localUrl || url, localParams || params)
-          setState(s => ({ ...s, data: response}))
+          setState(s => ({ ...s, loading: false, data: response, errors: {}}))
           return response
 
         } catch (e) {
 
           if (e instanceof ApiError) {
-            setState(s => ({ ...s, errors: e}))
+            setState(s => ({ ...s, loading: false, errors: e.data, data: {}}))
           }
         }
 

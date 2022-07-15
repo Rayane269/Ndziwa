@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Contracts\Session\Session as SessionSession;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,5 +33,10 @@ class AuthServiceProvider extends ServiceProvider
             'transaction-argent', 
             fn (User $user) => in_array('ROLE_ADMIN', json_decode($user->roles))
         );
+
+        Gate::define('next-step', function (?User $user, Session $session) {
+            $register = $session->get('register', []);
+            return key_exists($register['lastStep'], $session->get('register.steps') ?? []);
+        });
     }
 }

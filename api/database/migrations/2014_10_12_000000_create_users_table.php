@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->string('nin')->nullable()->unique();
-            $table->dateTime('date_naissance');
             $table->string('type')->default('particulier');
             $table->string('telephone')->unique();
             $table->timestamp('telephone_verified_at')->nullable();

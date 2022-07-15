@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -17,6 +18,10 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->string('nom');
             $table->string('code');
+            $table->string('code_appel')->nullable();
+            $table->string('devise')->default("USD");
+            $table->string("flag");
+            $table->json('timezone')->default(new Expression('(JSON_ARRAY())'))->comment('DC2Type:json');
             $table->timestamps();
         });
 

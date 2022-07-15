@@ -20,7 +20,6 @@ class UserFactory extends Factory
         return [
             'nom' => $this->faker->name(),
             'prenom' => $this->faker->lastName(),
-            'date_naissance' => "2000-07-19",
             'telephone' => '3898765',
             'telephone_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

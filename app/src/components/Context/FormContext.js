@@ -18,14 +18,16 @@ const FormContext = ({context, defaultValue, children}) => {
     const value = useMemo(() => (Object.assign({}, data, {change: change})), [data, change])
     
     return (
-        <context.Provider value={value}>
-            <View style={{
-                marginTop: SIZES.padding * 4,
-                marginHorizontal: SIZES.padding * 2
-            }}>
-                {children}
-            </View>
-        </context.Provider>
+        <View>
+            <context.Provider value={value}>
+                <View style={{
+                    marginTop: SIZES.padding * 3.5,
+                    marginHorizontal: SIZES.padding * 2
+                }}>
+                    {children}
+                </View>
+            </context.Provider>
+        </View>
     )
 }
 
