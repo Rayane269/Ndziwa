@@ -124,8 +124,9 @@ const FirstStep = ({navigation}) => {
                             <ButtonSubmitContext 
                                 context={FormCreateContext}
                                 onSubmit={handleSubmit}
+                                disabled={loading}
                             >
-                                { loading ? <ActivityIndicator color={COLORS.white} size="small" /> : `Suivant`}
+                                { loading ? <ActivityIndicator color={COLORS.black} size="small" /> : `Suivant`}
                             </ButtonSubmitContext>
                         </View>
                     </RenderFormContext>

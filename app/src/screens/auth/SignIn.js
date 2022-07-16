@@ -43,7 +43,7 @@ const SignIn = ({navigation}) => {
                                 style={{
                                     fontSize: SIZES.padding * 1.5,
                                     fontWeight: "bold",
-                                    color: COLORS.black
+                                    color: COLORS.gray
                                 }}
                             >
                                 Entrez votre numéro de téléphone et votre mot de passe pour vous connecter
@@ -100,8 +100,7 @@ const SignIn = ({navigation}) => {
             navigation.navigate('home')
         }
     }, [authenticated])
-    
-    console.log(loading, loadingIsAuthenticate)    
+       
     return (
         <KeyboardAvoidingView 
             behavior={Platform.OS === "ios" ? "padding" : null}
@@ -121,8 +120,13 @@ const SignIn = ({navigation}) => {
                         <RenderFormContext defaultValue={{"telephone": value.telephone, "password": value.password}}>
                             <TextFieldContext context={FormCreateContext} name="telephone" type="phone-pad" errors={error.errors}>Téléphone</TextFieldContext>
                             <PasswordFieldContext context={FormCreateContext} name="password" errors={error.errors}>Mot de passe</PasswordFieldContext>
-                            <ButtonSubmitContext context={FormCreateContext} onSubmit={handleSubmit}>
-                                { loading ? <ActivityIndicator color={COLORS.white} size="small" /> : `Se connecter`}
+                            <ButtonSubmitContext disabled={loading} context={FormCreateContext} onSubmit={handleSubmit}>
+                                { loading 
+                                    ?
+                                        <ActivityIndicator color={COLORS.black} size="small" /> 
+                                    : 
+                                        `Se connecter`
+                                }
                             </ButtonSubmitContext>
                         </RenderFormContext>
                     </ScrollView>

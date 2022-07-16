@@ -101,8 +101,9 @@ const FourthStep = ({navigation}) => {
                             <ButtonSubmitContext 
                                 context={FormCreateContext}
                                 onSubmit={handleSubmit}
+                                disabled={loading}
                             >
-                                { loading ? <ActivityIndicator color={COLORS.white} size="small" /> : `S'inscrire`}
+                                { loading ? <ActivityIndicator color={COLORS.black} size="small" /> : `S'inscrire`}
                             </ButtonSubmitContext>
                         </View>
                     </RenderFormContext>

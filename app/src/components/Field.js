@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     },
 
     btn: {
-        minWidth: 110,
+        minWidth: 125,
         height: 50,
         backgroundColor: COLORS.black,
         borderRadius: SIZES.radius / 1.5,
