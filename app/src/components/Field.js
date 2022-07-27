@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useRef, useState} from "react"
+import React, {forwardRef, useCallback, useContext, useEffect, useRef, useState} from "react"
 import { 
     TextInput, 
     View, 
@@ -6,7 +6,9 @@ import {
     StyleSheet, 
     TouchableOpacity, 
     Image, 
-    ViewComponent
+    ViewComponent,
+    Keyboard,
+    ScrollView
 } from "react-native"
 import { COLORS, SIZES, FONTS, icons, images } from "../../constants"
 
@@ -22,7 +24,7 @@ const PasswordField = ({children}) => {
     const [showPassword, setShowPassword] = useState(true)
 
     return(
-        <View>
+        <ScrollView>
             <TextInput 
                 style={styles.input} 
                 placeholder={children}
@@ -48,40 +50,51 @@ const PasswordField = ({children}) => {
                     }}
                 />
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     )
 }
 
 /**
- * Crée un champ de type text
+ * Crée un champ de type text en utilisant des champs non controlé
  * 
- * @param {string} type 
- * @param {ViewComponent} children
+ * @param {{type: string, name: string, errors: Objec, state: {value, setValue}, style: Object}} params 
  * @returns { ViewComponent }
  */
-const TextField = ({type="text", children}) => {
+const TextField = ({type="default", name, errors, state, style, children}) => {
+    console.log(errors)
     return (
-        <View style={styles.parent_input}>
+        <ScrollView style={styles.parent_input}>
             <TextInput 
-                style={styles.input}
+                style={[styles.input, style, {borderColor: errors && errors[name] ? COLORS.red : style.borderColor || 'black'}]}
                 keyboardType={type} 
+                autoFocus
+                value={state.value}
+                maxLength={14}
                 placeholder={children} 
-                placeholderTextColor={COLORS.lightGray}  
+                placeholderTextColor={COLORS.black}  
+                onChangeText={text => {state.setValue(text); if (errors != null) errors[name] = null}}
             />
-        </View>
+
+            {errors && errors[name] &&
+                <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.5}}>{errors[name]}</Text>
+            }
+        </ScrollView>
     )
 }
 
 /**
  * Crée un button de soumission
  * 
- * @param {CallableFunction} onSubmit fonction à appeller lorsque on submit
- * @param {Component} children 
+ * @param {{ onClick: CallableFunction, children: ChildNode, style: Object|null }} 
  * @returns {TouchableOpacity}
  */
- const ButtonSubmit = ({onSubmit, children}) => {
+ const ButtonSubmit = ({onCLick, children, style}) => {
+    const handleClick = () => {
+        onCLick()
+        console.log(onCLick)
+    }
     return (
-        <TouchableOpacity onPress={onSubmit} style={styles.btn}>
+        <TouchableOpacity onPress={handleClick} style={[styles.btn, style]}>
             <Text style={styles.btn_text}>{children}</Text>
         </TouchableOpacity>
     )
@@ -107,7 +120,7 @@ const TextField = ({type="text", children}) => {
     }, [data.change])
 
     return (
-        <View style={styles.parent_input}>
+        <ScrollView style={styles.parent_input}>
             <TextInput 
                 style={[styles.input, {borderColor: errors && errors[name] ? COLORS.red : COLORS.black}]}
                 name={name}
@@ -123,7 +136,7 @@ const TextField = ({type="text", children}) => {
             {helper && 
                 <Text style={{color: COLORS.gray, paddingLeft: 5, fontSize: SIZES.padding * 1.4}}>{helper}</Text>
             }
-        </View>
+        </ScrollView>
     )
 }
 
@@ -142,7 +155,7 @@ const TelFieldContext = ({context, name, country, errors=null, helper, children}
     }, [data.change])
     
     return (
-        <View style={styles.parent_input}>
+        <ScrollView style={styles.parent_input}>
             <View style={[
                 styles.input, 
                 {
@@ -212,7 +225,7 @@ const TelFieldContext = ({context, name, country, errors=null, helper, children}
             {helper && 
                 <Text style={{color: COLORS.gray, paddingLeft: 5, fontSize: SIZES.padding * 1.4}}>{helper}</Text>
             }
-        </View>
+        </ScrollView>
     )
 }
 
@@ -240,7 +253,7 @@ const SmsVerify = ({errors=null, onSubmit}) => {
     }, [sms])
     
     return (
-        <View>
+        <ScrollView>
             {errors !== null &&
                 <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.8, textAlign: "center", marginTop: SIZES.padding * 2}}>{errors.errors}</Text>
             }
@@ -306,7 +319,7 @@ const SmsVerify = ({errors=null, onSubmit}) => {
                     <Text style={{color: COLORS.green, fontSize: SIZES.padding * 1.5, marginTop: 6}}>Renvoyer le code</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -458,7 +471,7 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.radius / 1.5,
         alignItems: "center",
         justifyContent: "center",
-        paddingHorizontal: SIZES.padding * 2
+        paddingHorizontal: SIZES.padding * 1.5
     },
 
     btn_text: {

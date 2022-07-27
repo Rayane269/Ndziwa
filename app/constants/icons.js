@@ -16,6 +16,10 @@ const scan = require("../assets/icons/scan.png");
 const send = require("../assets/icons/send.png");
 const user = require("../assets/icons/user.png");
 const wallet = require("../assets/icons/wallet.png");
+const settings = require("../assets/icons/settings.png")
+const home = require("../assets/icons/home.png")
+const chart = require("../assets/icons/pie_chart.png")
+const transaction = require("../assets/icons/transaction.png")
 
 export default {
     back,
@@ -35,5 +39,9 @@ export default {
     scan,
     send,
     user,
-    wallet
+    wallet,
+    settings,
+    home,
+    chart,
+    transaction
 }

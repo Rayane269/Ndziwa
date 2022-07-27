@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import React, { createContext, useCallback, useEffect, useState } from "react"
 import { 
     View, 
     Text, 
@@ -6,16 +6,17 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    Image,
     ActivityIndicator
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
-import { COLORS, SIZES, FONTS, icons, images } from '../../../constants'
+import { COLORS, SIZES, FONTS } from '../../../constants'
 import { TextFieldContext, PasswordFieldContext, ButtonSubmitContext } from "../../components/Field"
 import { isAuthenticated, useAuth } from "../../functions/auth"
 import { FormContext } from "../../components/Context"
 import { RenderLogo } from "../../components/Utils"
 import Spinner from "react-native-loading-spinner-overlay"
+ 
+
 /**
  * Connexion
  * 
@@ -26,15 +27,15 @@ const SignIn = ({navigation}) => {
     
     const FormCreateContext = createContext({})
     const [value, setValue] = useState({"telephone": null, "password": null})
-    const { user, loading, error, login } = useAuth()
+    const { data, loading, error, login } = useAuth()
     const { authenticated, loadingIsAuthenticate, is } = isAuthenticated()
     
     //functions
     const RenderFormContext = ({defaultValue, children}) => {
 
         return (
-            <FormContext context={FormCreateContext} defaultValue={defaultValue} >
-                    <View style={{marginBottom: SIZES.padding * 3}}>
+            <FormContext style={{padding: SIZES.padding * 2}} context={FormCreateContext} defaultValue={defaultValue} >
+                    <View style={{marginBottom: SIZES.padding * 2}}>
                         <View>
                             <Text style={{textAlign: "center", color: COLORS.black, ...FONTS.body1, marginBottom: 20}}>Connexion</Text>
                         </View>
@@ -52,11 +53,12 @@ const SignIn = ({navigation}) => {
                     </View>
                     {error && Object.values(error).length === 1 &&
                         <View style={{
-                            alignItems: "center",
                             height: 50,
+                            marginBottom: 10
                             
                         }}>
                             <Text style={{
+                                textAlign: "center",
                                 fontSize: SIZES.padding * 1.7,
                                 color: COLORS.red
                             }}>{error.errors}</Text>
@@ -94,7 +96,7 @@ const SignIn = ({navigation}) => {
     useEffect(() => {
         is()
     }, [])
-
+    
     useEffect(() => {
        if (authenticated) {
             navigation.navigate('home')
@@ -106,7 +108,7 @@ const SignIn = ({navigation}) => {
             behavior={Platform.OS === "ios" ? "padding" : null}
             style={{ flex: 1 }}
         >
-            {loadingIsAuthenticate &&
+            {loadingIsAuthenticate && authenticated === null &&
                 <Spinner visible={true} />
             }
             {!authenticated && !loadingIsAuthenticate &&

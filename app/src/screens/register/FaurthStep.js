@@ -28,14 +28,14 @@ const FourthStep = ({navigation}) => {
     const RenderFormContext = ({defaultValue, children}) => {
         
         return (
-            <FormContext context={FormCreateContext} defaultValue={defaultValue}>
+            <FormContext style={{padding: SIZES.padding * 2}} context={FormCreateContext} defaultValue={defaultValue}>
                 <View style={{justifyContent: "center", alignItems: "center", marginBottom: SIZES.padding * 2}}>
                     <Text style={{
                         justifyContent: "center",
                         color: COLORS.black, ...FONTS.h1
                     }}>Mot de passe</Text>
                     <Text style={{color: COLORS.black, marginTop: SIZES.padding * 2, fontSize: SIZES.padding * 1.5}}>
-                        Pour plus de sécurité, définissez un mot de passe sûr, complexe et long à votre compte.
+                        Pour plus de sécurité, définissez un mot de passe sûr, complexe et long.
                     </Text>
                 </View>
                 <View style={{marginTop: SIZES.padding * 4}}>
@@ -44,7 +44,7 @@ const FourthStep = ({navigation}) => {
             </FormContext>
         )
     }
-    console.log(data, errors, loading)
+    
     const handleSubmit = useCallback(async (value) => {
         setValue(v => ({ ...v, password: value.password, password_confirm: value.password_confirm}))
         const response = await fetch(null, {

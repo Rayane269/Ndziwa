@@ -8,6 +8,7 @@ use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Register\RegisterController;
 use App\Http\Controllers\Transaction\DepotController;
 use App\Http\Controllers\Transaction\RetraitController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,4 @@ Route::middleware('auth:sanctum')->prefix('/transaction/')->group(function () {
 });
 
 //profile
-Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')->get('/me', [UserController::class, 'me']);

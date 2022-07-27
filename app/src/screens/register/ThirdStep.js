@@ -17,7 +17,7 @@ const ThirdStep = ({navigation}) => {
     const RenderFormContext = useCallback(({defaultValue, children}) => {
         
         return (
-            <FormContext context={FormCreateContext} defaultValue={defaultValue}>
+            <FormContext style={{padding: SIZES.padding * 2}} context={FormCreateContext} defaultValue={defaultValue}>
                 <View style={{marginBottom: 20}}>
                     <Text style={{...FONTS.h3, color: COLORS.black}}>
                         Entrez le code qui vient de vous être envoyé

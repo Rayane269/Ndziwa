@@ -48,7 +48,7 @@ const FirstStep = ({navigation}) => {
     const RenderFormContext = ({defaultValue, children}) => {
         
         return (
-            <FormContext context={FormCreateContext} defaultValue={defaultValue}>
+            <FormContext style={{padding: SIZES.padding * 2}} context={FormCreateContext} defaultValue={defaultValue}>
                 <View style={{justifyContent: "center", alignItems: "center", marginBottom: SIZES.padding * 2}}>
                     <Text style={{
                         justifyContent: "center",

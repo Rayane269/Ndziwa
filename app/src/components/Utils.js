@@ -8,7 +8,7 @@ export const RenderLogo = () => {
         <View
             style={{
                 marginTop: SIZES.padding,
-                height: 100,
+                height: 80,
                 alignItems: 'center',
                 justifyContent: 'center'
             }}

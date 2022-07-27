@@ -9,7 +9,7 @@ import { ApiError, jsonFetch } from "./api"
  *
  * @param {string} url
  * @param {object} params
- * @return {{data: Object|null, fetch: fetch, loading: boolean, done: boolean}}
+ * @return {{data: Object|null, fetch: fetch, loading: boolean, errors: Object|null}}
  */
  export function useJsonFetch (url, params = {}) {
 
@@ -19,6 +19,14 @@ import { ApiError, jsonFetch } from "./api"
       errors: {}
     })
 
+    /**
+     * fetch
+     * 
+     * @param {string}
+     * @param {{method: string, body: {}, ...params}}
+     * 
+     * @return {void}
+     */
     const fetch = useCallback( async (localUrl, localParams) => {
 
         setState(s => ({ ...s, loading: true }))
