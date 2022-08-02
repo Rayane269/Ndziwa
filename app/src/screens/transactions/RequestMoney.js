@@ -2,15 +2,15 @@ import React from "react"
 import { View, Text } from "react-native"
 
 
-const Transfert = () => {
+const RequestMoney = () => {
 
 
     return (
         <View>
-            <Text>Je suis le transfert page</Text>
+            <Text>Je suis le request page</Text>
         </View>
     )
 }
 
 
-export default Transfert
+export default RequestMoney

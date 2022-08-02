@@ -1,6 +1,6 @@
-import History from './History'
-import Tontine from './Tontine'
-import Transfert from './Transfert'
+import RequestMoney from "./RequestMoney"
+import SentMoney from "./SentMoney"
 
 
-export { History, Tontine, Transfert }
+
+export { RequestMoney, SentMoney }

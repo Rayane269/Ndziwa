@@ -45,8 +45,8 @@ export const useAuth = () => {
     /**
      * Recupére l'utilisateur courant
      */
-    const getUser = useCallback( async () => {
-        const url = `${BASE_URL}/api/me`
+    const getUser = useCallback( async (id) => {
+        const url = `${BASE_URL}/api/user/${id}`
         setState(s => ({ ...s, loading: true}))
 
         try {
@@ -87,7 +87,6 @@ export const useAuth = () => {
 
     return { ...state, login, logout, getUser }
 }
-
 
 /**
  * activer un compte en saisissant le nin
@@ -130,7 +129,7 @@ export const activateMyAccount = () => {
 export function isAuthenticated () {
 	const [state, setState] = useState({
         data: {},
-        authenticated: null,
+        authenticated: false,
         loadingIsAuthenticate: false
     })
     const url = `${BASE_URL}/api/me`
@@ -142,62 +141,107 @@ export function isAuthenticated () {
         setState(s => ({ ...s, loadingIsAuthenticate: true }))
         try {
             const data = await jsonFetch(url, {method: "GET"})
-            
             setState(s => ({ ...s, authenticated: true, loadingIsAuthenticate: false, data: data }))
+            return true
         } catch(e) {
             if (e instanceof ApiError) {
                 setState(s => ({ ...s, authenticated: false, loadingIsAuthenticate: false, data: {} }))
+                return false
             }
         }
-
-        //setState(s => ({ ...s, loadingIsAuthenticate: false }))
-
     }, [])
 
     return { ...state, is }
 }
 
-
 /**
- * Vérifie si l'utilisateur est connecté
- *
- * @return {boolean}
+ * verifie si le mot de passe saisit est celui de l'utilisateur courant
+ * 
+ * @returns {{error: null|Object, loading: boolean, confirm: CallableFunction}}
  */
-export function lastNotificationRead () {
-	
+export function passwordConfirmation () {
+
+    const { data, loading, errors, fetch } = useJsonFetch()
+
+    /**
+     * @param {{name: string, value: any}} data
+     */
+    const confirm = async (data) => {
+
+        const response = await fetch(
+            `${BASE_URL}/api/password-confirmation`, 
+            {
+                method: "POST",
+                body: data
+            }
+        )
+
+        return response
+    }
+
+    return { data, loading, error: errors, confirm }
+
 }
 
 /**
- * Renvoie l'utilisateur
- *
- * @return {{data: Object|null, loading: boolean, errors: Object|null}}
+ * Recupere les operations entre l'utilisateur courant et un autre
+ * 
+ * @param {number} id 
+ * @returns {{data: null|Object, loading: boolean, errors: null|Object, getOperations: CallableFunction}}
  */
-export function getUser () {
-	const url = `${BASE_URL}/api/me`;
-    const {data, loading, errors, fetch} = useJsonFetch(url)
+export function getOperationWithAnotherPerson (id) {
 
-    fetch()
+    const { data, loading, errors, fetch } = useJsonFetch()
 
-    return {data, loading, errors}
+    const getOperations = () => {
+        fetch(`${BASE_URL}/api/operations/${id}`, {method: "GET"})
+    }
 
+    return { data, loading, errors, getOperations }
 }
 
 /**
- * Vérifie si l'utilisateur connecté correspond à l'id passé en paramètre
- *
- * @param {number} userId
- * @return {boolean}
+ * 
+ * @returns {{sending: boolean, errorsTransfer: null|Object, send: send}}
  */
-export function canManage (userId) {
+export function setTransfertMoney () {
 
-	if (isAdmin()) {
-		return true
-	}
+    const { loading, errors, fetch } = useJsonFetch()
 
-	if (!userId) {
-		return false
-	}
+    /**
+     * 
+     * @param {{telephone: string, somme: float, libelle: string}} data 
+     */
+    const send = (data) => {
+        return fetch(
+            `${BASE_URL}/api/transaction/send`, 
+            {method: "POST", body: data}
+        )
+    }
 
-	
+    return { sending: loading, errorsTransfer: errors, send }
 }
-  
+
+/**
+ * Verifie si le code saisit match avec celui envoyé par sms
+ * 
+ * @returns {{verifying: boolean, errorSms: Object|null, verify: verify}}
+ */
+export const setSmsVerify = () => {
+
+    const { loading, errors, fetch } = useJsonFetch()
+
+    /**
+     * 
+     * @param {{name: string, value: number}} code 
+     */
+    const verify = (code) => {
+    
+        return fetch(
+            `${BASE_URL}/api/sms-verify`, 
+            {method: "POST", body: code}
+        )
+    }
+
+    return { verifying: loading, errorSms: errors, verify }
+}

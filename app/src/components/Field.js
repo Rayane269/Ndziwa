@@ -1,4 +1,4 @@
-import React, {forwardRef, useCallback, useContext, useEffect, useRef, useState} from "react"
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react"
 import { 
     TextInput, 
     View, 
@@ -7,78 +7,106 @@ import {
     TouchableOpacity, 
     Image, 
     ViewComponent,
-    Keyboard,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from "react-native"
 import { COLORS, SIZES, FONTS, icons, images } from "../../constants"
 
-/**
- * créer un champ de type password
- * 
- * @param { Component } children 
- * @returns {ViewComponent}
- * 
- */
-const PasswordField = ({children}) => {
-
-    const [showPassword, setShowPassword] = useState(true)
-
-    return(
-        <ScrollView>
-            <TextInput 
-                style={styles.input} 
-                placeholder={children}
-                placeholderTextColor={COLORS.lightGreen}
-                secureTextEntry={showPassword}
-            />
-            <TouchableOpacity 
-                style={{
-                    position: 'absolute',
-                    right: 7,
-                    bottom: 13,
-                    height: 30,
-                    width: 30
-                }}
-                onPress={() => setShowPassword(!showPassword)}
-            >
-                <Image 
-                    source={ showPassword ? icons.eye : icons.disable_eye}
-                    style={{
-                        height: 23,
-                        width: 23,
-                        tintColor: COLORS.white
-                    }}
-                />
-            </TouchableOpacity>
-        </ScrollView>
-    )
-}
 
 /**
- * Crée un champ de type text en utilisant des champs non controlé
+ * Crée un champ de type text en utilisant des champs non controlés
  * 
- * @param {{type: string, name: string, errors: Objec, state: {value, setValue}, style: Object}} params 
+ * @param {{
+ *  type: string, 
+ *  name: string, 
+ *  maxLength: number,
+ *  multiline: boolean,
+ *  errors: Objec,
+ *  autoFocus: boolean, 
+ *  state: {value, setValue}, 
+ *  style: Object
+ * }} props 
  * @returns { ViewComponent }
  */
-const TextField = ({type="default", name, errors, state, style, children}) => {
-    console.log(errors)
+const TextField = ({type="default", maxLength, multiline=false, autoFocus=false, name, errors, state={}, style={}, children}) => {
+    
     return (
-        <ScrollView style={styles.parent_input}>
+        <>
             <TextInput 
-                style={[styles.input, style, {borderColor: errors && errors[name] ? COLORS.red : style.borderColor || 'black'}]}
+                style={[styles.input, style, {borderColor: errors && errors[name] ? COLORS.red : style.borderColor || 'transparent'}]}
                 keyboardType={type} 
-                autoFocus
+                multiline={multiline}
+                maxLength={maxLength}
+                autoFocus={autoFocus}
                 value={state.value}
-                maxLength={14}
                 placeholder={children} 
-                placeholderTextColor={COLORS.black}  
+                placeholderTextColor={style.color || COLORS.black}  
                 onChangeText={text => {state.setValue(text); if (errors != null) errors[name] = null}}
             />
 
             {errors && errors[name] &&
                 <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.5}}>{errors[name]}</Text>
             }
-        </ScrollView>
+        </>
+    )
+}
+
+/**
+ * saisir un mot de passe
+ * 
+ * @param {{
+ *  name: string, 
+ *  state: {value, setValue}, 
+ *  loading: boolean, 
+ *  errors: Object
+ * }} props
+ * 
+ * @returns 
+ */
+const PasswordField = ({name, state={}, loading, errors, children}) => {
+    const [showPassword, setShowPassword] = useState(true)
+
+    return(
+        <View style={styles.parent_input}>
+            <TextInput 
+                style={[styles.input, {borderColor: errors && errors[name] ? COLORS.red : COLORS.black}]}
+                value={state.value}
+                placeholder={children}
+                placeholderTextColor={COLORS.black}
+                secureTextEntry={showPassword}
+                onChangeText={text => {state.setValue(text); if (errors != null) errors[name] = null}} 
+
+            />
+            <View style={{
+                position: 'absolute',
+                right: 7,
+                top: 15,
+                height: 30,
+                width: 30
+            }}>
+                {loading
+                    ?
+                        <ActivityIndicator color={COLORS.black} />
+                    : (
+                        <TouchableOpacity 
+                            onPress={() => setShowPassword(!showPassword)}
+                        >
+                            <Image 
+                                source={ showPassword ? icons.eye : icons.disable_eye}
+                                style={{
+                                    height: 23,
+                                    width: 23,
+                                    tintColor: COLORS.black
+                                }}
+                            />
+                        </TouchableOpacity>
+                    )
+                }
+            </View>
+            {errors && errors[name] &&
+                <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.3}}>{errors[name]}</Text>
+            }
+        </View>
     )
 }
 
@@ -232,9 +260,11 @@ const TelFieldContext = ({context, name, country, errors=null, helper, children}
 /**
  * verification du code sms
  * 
- * @param {string} name
- * @param {Object} errors
- * @param {ViewComponent} children 
+ * @param {{
+ *  onSubmit: CallableFunction,
+ *  errors: null|Object,
+ * }} props
+ * 
  * @returns {ViewComponent}
  */
 const SmsVerify = ({errors=null, onSubmit}) => {
@@ -255,7 +285,7 @@ const SmsVerify = ({errors=null, onSubmit}) => {
     return (
         <ScrollView>
             {errors !== null &&
-                <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.8, textAlign: "center", marginTop: SIZES.padding * 2}}>{errors.errors}</Text>
+                <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.8, textAlign: "center", marginTop: SIZES.padding * 2}}>{errors.errors || errors}</Text>
             }
             <View style={styles.smsContainer}>
                 <View style={styles.smsBox}>
@@ -327,12 +357,13 @@ const SelectField = ({children, onClick, name, errors, helper}) => {
     
     return (
         <View 
-            style={styles.parent_input}
+            style={[styles.parent_input, {}]}
         >
             <TouchableOpacity 
                 style={[
                     styles.input, 
                     {
+                        height: 55,
                         flexDirection: "row", 
                         paddingHorizontal: 12, 
                         alignItems: "center",
@@ -377,7 +408,7 @@ const SelectField = ({children, onClick, name, errors, helper}) => {
 
     const [showPassword, setShowPassword] = useState(true)
     const data = useContext(context)
-    const handleChange = useCallback((name, value) => {
+    const handleChange = useCallback((value) => {
         if (errors != null) {
             errors[name] = null
         }
@@ -392,7 +423,7 @@ const SelectField = ({children, onClick, name, errors, helper}) => {
                 placeholder={children}
                 placeholderTextColor={COLORS.black}
                 secureTextEntry={showPassword}
-                onChangeText={value => handleChange(name, value)} 
+                onChangeText={value => handleChange(value)} 
 
             />
             <TouchableOpacity 
@@ -403,7 +434,7 @@ const SelectField = ({children, onClick, name, errors, helper}) => {
                     height: 30,
                     width: 30
                 }}
-                onPress={() => setShowPassword(!showPassword)}
+                onPress={() => setShowPassword(p => !p)}
             >
                 <Image 
                     source={ showPassword ? icons.eye : icons.disable_eye}
@@ -451,15 +482,14 @@ const SelectField = ({children, onClick, name, errors, helper}) => {
 
 const styles = StyleSheet.create({
     parent_input: {
-        marginBottom: SIZES.padding * 1.4
+        marginBottom: SIZES.padding * 2,
     },
 
     input: {
-        height: 50,
         borderWidth: 1,
         borderColor: COLORS.black,
         borderRadius: 10,
-        paddingHorizontal: SIZES.padding * 1.5,
+        paddingHorizontal: SIZES.padding * 2,
         color: COLORS.black,
         fontSize: SIZES.padding * 1.5,
     },
@@ -480,7 +510,7 @@ const styles = StyleSheet.create({
     },
 
     smsContainer: {
-        marginVertical: SIZES.padding * 4,
+        marginVertical: SIZES.padding * 1.8,
         flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "center",

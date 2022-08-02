@@ -124,13 +124,12 @@ const SecondStep = ({navigation}) => {
         </Modal>
     })
     const handleSubmit = useCallback(async (value) => {
-        
+        setValue(v => ({ ...v, telephone: value.telephone}))
         const response = await fetch(null, {
             method: "POST",
             body: value
         })
-        setValue(v => ({ ...v, telephone: value.telephone}))
-        console.log(response)
+        
         if (response !== undefined) {
             navigation.navigate('inscription_step_3')
         }

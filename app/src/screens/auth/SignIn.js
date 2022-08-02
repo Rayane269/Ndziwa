@@ -15,6 +15,7 @@ import { isAuthenticated, useAuth } from "../../functions/auth"
 import { FormContext } from "../../components/Context"
 import { RenderLogo } from "../../components/Utils"
 import Spinner from "react-native-loading-spinner-overlay"
+import { useNavigation } from "@react-navigation/native"
  
 
 /**
@@ -23,13 +24,21 @@ import Spinner from "react-native-loading-spinner-overlay"
  * @param {NavigationContainerEventMap} navigation 
  * @returns 
  */
-const SignIn = ({navigation}) => {
-    
+const SignIn = () => {
+    const navigation = useNavigation()
     const FormCreateContext = createContext({})
     const [value, setValue] = useState({"telephone": null, "password": null})
     const { data, loading, error, login } = useAuth()
     const { authenticated, loadingIsAuthenticate, is } = isAuthenticated()
     
+
+    useEffect(() => {
+        if (!authenticated) {
+            is().
+            then(connected => (connected && navigation.navigate('home')))
+        }
+    }, [])
+
     //functions
     const RenderFormContext = ({defaultValue, children}) => {
 
@@ -75,40 +84,30 @@ const SignIn = ({navigation}) => {
                         <View style={{flexDirection: "row", marginTop: 20}}>
                             <Text style={{color: COLORS.black, fontSize: SIZES.padding * 1.2}}>Vous n'avez pas de compte ? </Text>
                             <TouchableOpacity onPress={() => navigation.navigate('inscription_step_1')}>
-                                <Text style={{color: COLORS.blue, marginLeft: 10}}>Inscrivez-vous</Text>
+                                <Text style={{color: COLORS.green, marginLeft: 10}}>Inscrivez-vous</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
             </FormContext>
         )
     }
-
+    
     //handler
     const handleSubmit = useCallback(async (value) => {
         setValue(v => ({...v, password: value.password, telephone: value.telephone}))
         const response = await login(value)
         if (response !== undefined) {
+            console.log('connecté')
             navigation.navigate('home')
         }
     }, [])
-    
-    //const $response = isAuthenticated();
-    useEffect(() => {
-        is()
-    }, [])
-    
-    useEffect(() => {
-       if (authenticated) {
-            navigation.navigate('home')
-        }
-    }, [authenticated])
        
     return (
         <KeyboardAvoidingView 
             behavior={Platform.OS === "ios" ? "padding" : null}
             style={{ flex: 1 }}
         >
-            {loadingIsAuthenticate && authenticated === null &&
+            {loadingIsAuthenticate &&
                 <Spinner visible={true} />
             }
             {!authenticated && !loadingIsAuthenticate &&

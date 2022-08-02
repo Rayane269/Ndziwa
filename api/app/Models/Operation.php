@@ -13,7 +13,15 @@ class Operation extends Model
         return $this->belongsTo(Compte::class);
     }
 
-    public function responsable() {
-        return $this->belongsTo(User::class, 'responsable_id', 'id');
+    public function emit() {
+        return $this->belongsTo(User::class, 'emetteur', 'id');
+    }
+
+    public function accredit() {
+        return $this->belongsTo(User::class, 'beneficiaire', 'id');
+    }
+
+    public function deposit() {
+        return $this->belongsTo(User::class, 'agent', 'id');
     }
 }

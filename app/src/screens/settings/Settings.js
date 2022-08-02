@@ -13,7 +13,6 @@ const Settings = ({navigation}) => {
             {loading &&
                 <Spinner visible={true} />
             }
-            <Text>Je suis le settings page</Text>
             <Button onPress={() => {logout(); navigation.replace('connexion')}} title="Deconnexion" />
         </View>
     )

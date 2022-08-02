@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('operations', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->foreignId('compte_id')->constrained('comptes');
-            $table->foreignId('responsable_id')->constrained('users');
+            $table->foreignId('emetteur')->nullable()->constrained('users');
+            $table->foreignId('beneficiaire')->nullable()->constrained('users');
+            $table->foreignId('agent')->nullable()->constrained('users');
             $table->float('somme', 11);
             $table->string('libelle')->nullable();
             $table->string('type_operation', 50);

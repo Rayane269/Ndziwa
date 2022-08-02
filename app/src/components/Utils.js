@@ -24,7 +24,7 @@ export const RenderLogo = () => {
     )
 }
 
-export const LastLink = ({navigation, link}) => {
+export const LastLink = ({navigation, link, color}) => {
     return (
         <TouchableOpacity onPress={() => navigation.navigate(link)}>
             <View
@@ -40,10 +40,11 @@ export const LastLink = ({navigation, link}) => {
                     resizeMode="contain"
                     style={{
                         width: 20,
-                        height: 20
+                        height: 20,
+                        tintColor: color
                     }}
                 />
-                <Text style={{ marginLeft: 10, color: COLORS.black }}>Précedent</Text>
+                <Text style={{ marginLeft: 10, color: color }}>Précédent</Text>
             </View>
         </TouchableOpacity>
     )

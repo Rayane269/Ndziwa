@@ -1,9 +1,6 @@
 import { useState, useCallback } from "react"
 import { ApiError, jsonFetch } from "./api"
 
-
-
-
 /**
  * Hook faisant un appel fetch et flash en cas d'erreur / succès
  *
@@ -22,12 +19,12 @@ import { ApiError, jsonFetch } from "./api"
     /**
      * fetch
      * 
-     * @param {string}
-     * @param {{method: string, body: {}, ...params}}
+     * @param {string} localUrl
+     * @param {{method: string, body: {}, ...params}} localParams
      * 
-     * @return {void}
+     * @return 
      */
-    const fetch = useCallback( async (localUrl, localParams) => {
+    const fetch = async (localUrl, localParams) => {
 
         setState(s => ({ ...s, loading: true }))
 
@@ -46,7 +43,9 @@ import { ApiError, jsonFetch } from "./api"
 
         setState(s => ({ ...s, loading: false }))
 
-    }, [url, params])
+    }
 
     return { ...state, fetch }
   }
+
+  

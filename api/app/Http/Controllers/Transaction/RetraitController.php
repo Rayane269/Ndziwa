@@ -28,24 +28,8 @@ class RetraitController extends Controller {
         $fields = $request->validate([
             'nin' => ['required', 'min:9'],
             'somme' => ['required'],
-            'libelle',
         ]);
 
-        $account = Compte::where('numero_compte', hash('md5', $fields['nin']))->first();
-
-        if ($account === null) {
-            return response()->json(['error' => 'Not found'], 404);
-        }
-
-        $somme = (float) $fields['somme'];
-        $account->bourse -= $somme;
-        // On enregistre l'operation sur une registre
-        $registre = $this->registerTransaction('retrait', $account, $somme, $fields['libelle'] ?? null);
-
-        if ($registre) {
-            return response()->json(['success' => __('message.success')], 201);
-        } else 
-            return response()->json(['error' => __('message.error')], 401);
-        
+        $this->makeDepositOrWithdrawalTransaction($fields, $this->WITHDRAWAL);
     }
 }

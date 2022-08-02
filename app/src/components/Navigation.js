@@ -8,7 +8,9 @@ import {
     SecondStep, 
     ThirdStep , 
     SignIn,
-    Home
+    Home,
+    SentMoney,
+    RequestMoney
 } from '../screens'
 import Tabs from './Tabs'
 
@@ -19,9 +21,10 @@ const Navigation = () => {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{
-                    headerShown: false
+                    headerShown: false,
+                    animation: "slide_from_right"
                 }}
-                initialRouteName={'connexion'}
+                initialRouteName={'home'}
             >
 
                 {/* Connexion */}
@@ -53,10 +56,30 @@ const Navigation = () => {
                     options={{headerShown: false}}
                 />
 
+                {/* Transaction */}
+                <Stack.Screen 
+                    name='SentMoney'
+                    component={SentMoney}
+                    options={{
+                        animation: "slide_from_bottom"
+                    }}
+                />
+                <Stack.Screen 
+                    name='RequestMoney'
+                    component={RequestMoney}
+                    options={{
+                        headerShown: true,
+                        animation: "slide_from_bottom"
+                    }}
+                />
+
                 {/* Tabs */}
                 <Stack.Screen 
                     name='home'
                     component={Tabs}
+                    options={{
+                        animation: "slide_from_right"
+                    }}
                 />
                 
             </Stack.Navigator>

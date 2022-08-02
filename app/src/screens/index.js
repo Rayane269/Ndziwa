@@ -1,8 +1,10 @@
 import Home from "./Home"
 import { FirstStep, SecondStep, ThirdStep, FourthStep } from "./register"
-import { History, Tontine, Transfert } from './transactions'
+import { RequestMoney, SentMoney } from './transactions'
 import { Settings } from './settings'
 import { SignIn } from './auth'
+import History from "./History"
+import Tontine from "./Tontine"
 
 export {
     FirstStep, 
@@ -13,6 +15,7 @@ export {
     Settings,
     History,
     Tontine,
-    Transfert,
+    SentMoney,
+    RequestMoney,
     Home,
 }

@@ -20,6 +20,9 @@ const settings = require("../assets/icons/settings.png")
 const home = require("../assets/icons/home.png")
 const chart = require("../assets/icons/pie_chart.png")
 const transaction = require("../assets/icons/transaction.png")
+const plus = require("../assets/icons/plus.png")
+const all = require("../assets/icons/plus_2.png")
+const next = require("../assets/icons/right_arrow.png")
 
 export default {
     back,
@@ -43,5 +46,8 @@ export default {
     settings,
     home,
     chart,
-    transaction
+    transaction,
+    plus,
+    all,
+    next,
 }

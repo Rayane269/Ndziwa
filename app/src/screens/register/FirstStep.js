@@ -118,7 +118,7 @@ const FirstStep = ({navigation}) => {
                                 <Text style={{
                                     fontSize: SIZES.padding * 1.4,
                                     textDecorationLine: "underline",
-                                    color: COLORS.gray
+                                    color: COLORS.green
                                 }}>J'ai déja un compte ?</Text>
                             </TouchableOpacity>
                             <ButtonSubmitContext 
