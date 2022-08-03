@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Region;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Gate;
@@ -86,11 +87,11 @@ class RegisterController extends Controller {
         $code = (int) $credentials['code'];
 
         if ($code !== 1234) {
-            return response()->json(['errors' => 'code de verification incorrect'], 400);
+            return throw new Exception(__("validation.confirmed", ["attribute" => "code"]), 403);
         }
 
         if (!$this->saveStep(['telephone_verified_at' => now()], 3)) {
-            return response()->json(['message' => __('message.step_indefined')], 401);
+            return throw new Exception(__("message.step_indefined"), 401);
         }
 
         return response()->json(['message' => __('message.success')], 201);

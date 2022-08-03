@@ -13,7 +13,6 @@ const ThirdStep = ({navigation}) => {
 
     const { data, loading, errors, fetch } = useJsonFetch(`${BASE_URL}/api/register/third-step`)
     const FormCreateContext = createContext({})
-
     const RenderFormContext = useCallback(({defaultValue, children}) => {
         
         return (
@@ -27,6 +26,8 @@ const ThirdStep = ({navigation}) => {
             </FormContext>
         )
     })
+
+    log()
 
     //handler
     const handleSubmit = useCallback( async (value) => {
@@ -61,7 +62,7 @@ const ThirdStep = ({navigation}) => {
                     <RenderFormContext defaultValue={{"code": null}}>
                         <SmsVerify
                             onSubmit={handleSubmit}
-                            errors={errors}
+                            errors={errors.message}
                         />
                         <ButtonSubmitContext disabled={!loading} onSubmit={handleSubmit} context={FormCreateContext}>
                             { loading ? <ActivityIndicator color={COLORS.white} size="small" /> : `Confirmer`}
