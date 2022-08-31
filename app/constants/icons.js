@@ -23,6 +23,7 @@ const transaction = require("../assets/icons/transaction.png")
 const plus = require("../assets/icons/plus.png")
 const all = require("../assets/icons/plus_2.png")
 const next = require("../assets/icons/right_arrow.png")
+const search = require("../assets/icons/search.png")
 
 export default {
     back,
@@ -50,4 +51,5 @@ export default {
     plus,
     all,
     next,
+    search
 }

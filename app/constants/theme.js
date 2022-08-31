@@ -35,6 +35,8 @@ export const COLORS = {
     hideBlack: "#0000001A",
     hideWhite: "#ffffff1A",
 
+    lightBlack: "#191919",
+
     transparent: "transparent",
 
 };

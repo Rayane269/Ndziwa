@@ -37,5 +37,6 @@ class RegionController extends Controller {
         }
 
         curl_close($curl);
+        return response()->json(Region::orderBy('nom')->get());
     }
 }

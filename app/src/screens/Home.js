@@ -1,16 +1,27 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { View, Text, Image, KeyboardAvoidingView, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, FlatList, ActivityIndicator } from "react-native"
-import { activateMyAccount, isAuthenticated } from "../functions/auth"
+import { View, 
+	Text, 
+	Image, 
+	StyleSheet, 
+	ScrollView, 
+	ImageBackground, 
+	TouchableOpacity, 
+	FlatList, 
+	ActivityIndicator, 
+} from "react-native"
+import { activateMyAccount } from "../functions/auth"
 import { COLORS, FONTS, icons, images, SIZES } from "../../constants"
-import LinearGradient from "react-native-linear-gradient"
 import { ButtonSubmit, TextField } from "../components/Field"
 import { ModalSetPassword, ModalWithDataEntry } from "../components/Modals"
-import { ModalSetSmsCode } from "../components/Modals/Modals"
+import MainLayout from "./MainLayout"
+import { connect } from "react-redux"
+import { getCurrentUserAction } from "../stores/actions"
+import { currentUserSelector } from "../stores/selectors"
+import { substrReplace } from "../functions/utils"
 
+const Home = ({userData, getCurrentUser, navigation}) => {
 
-const Home = ({navigation}) => {
-
-	const { data, authenticated, loadingIsAuthenticate, is } = isAuthenticated()
+	const { user, loading: loadingUser, errors: authenticated} = userData
 	const [payee, setPayee] = useState(null)
 	const [telephone, setTelephone] = useState(null)
 	const [modalVisible, setModalVisible] = useState({
@@ -27,9 +38,9 @@ const Home = ({navigation}) => {
 		{id: 6, nom: "Raida", prenom: "Youssouf", telephone: "3331328"},
 		{id: 7, nom: "Aboudou", prenom: "Chaida", telephone: "3331328"},
 	]
-	
+
 	useEffect(() => {
-		is()
+		getCurrentUser()
 	}, [])
 
 	//handler
@@ -40,11 +51,11 @@ const Home = ({navigation}) => {
 	 * @return {void}
 	 */
 	const handleSubmitNin = useCallback(async (value) => {
-		console.log(value, 'hentai')
+
 		const response = await activate({'nin': value})
 		
 		if (response !== undefined) {
-			is()
+			getCurrentUser()
 			setModalVisible(m => ({...m, nin: false}))
 		}
 	}, [])
@@ -103,7 +114,6 @@ const Home = ({navigation}) => {
 		</ModalWithDataEntry>
 	}, [modalVisible.nin, accountError])
 
-	
 	/**
 	 * header pour afficher les notifications, le solde ... 
 	 * 
@@ -111,104 +121,46 @@ const Home = ({navigation}) => {
 	 * @returns 
 	 */
 	const RenderHeader = useCallback(({user}) => {
-		console.log(user)
-		return (
-			<View style={{backgroundColor: COLORS.hideWhite, marginBottom: SIZES.padding * 2}}>
-				<View 
-					style={{
-						alignItems: "flex-end",
-						position: "relative",
-						width: "100%",
-						height: SIZES.padding * 3,
-						paddingTop: 5,
-					}}
-				>
-					<TouchableOpacity 
-						style={{
-							position: "relative", 
-							height: "100%",
-							width: 50,
-							justifyContent: "center"
-						}}
-					>
-						<Text
-							style={{
-								color: COLORS.white,
-								backgroundColor: COLORS.red,
-								textAlign: "center",
-								borderRadius: SIZES.radius,
-								position: "absolute",
-								width: 25,
-								height: 25,
-								top: 0,
-								right: 5,
-								padding: 2
-							}}
-						>
-							3
-						</Text>
-						<Image 
-							source={icons.bell}
-							style={{
-									width: 25,
-									height: 25,
-									tintColor: COLORS.white
-							}}
-						/>
-					</TouchableOpacity>
-				</View>
 
+		return (
+			<View style={{backgroundColor: COLORS.green, marginBottom: SIZES.padding}}>
 				<View style={{
 					height: SIZES.height / 4,
-					flexDirection: "row",
-					justifyContent: "center",
-					alignItems: "center",
 				}}>
 					<View style={{
 						flex: 1,
-						paddingHorizontal: 5
+						justifyContent: "center",
+						alignItems: "flex-end",
 					}}>
-						<Text style={{
-							fontSize: SIZES.padding * 2.4,
-							color: COLORS.green,
-							marginBottom: 5,						
-						}}>
-							Hello {user.fullName} !
-						</Text>
-						<Text style={{color: COLORS.white, fontSize: SIZES.padding * 1.6}}>Votre solde est de </Text>
-
-					</View>
-					<View style={{flex: 1}}>
 						<ImageBackground 
 							source={images.banner}
-							resizeMode="contain"
+							resizeMode="stretch"
 							style={{
 								flex: 1,
 								alignItems: "center",
-								justifyContent: "center"
+								justifyContent: "center",
+								width: "85%",
+								height: "100%"
 							}}
 						>
-								<View 
-									style={{
-										flexDirection: "column",
-										justifyContent: "center",
-										alignItems: 'center',
-										marginBottom: SIZES.padding * 2,
-									}}
-								>
-									<Text style={{
-											color: COLORS.white, 
-											...FONTS.h4,
-											textAlign: "center",
-											fontWeight: "bold",
-											marginTop: SIZES.padding * 4,
-											marginLeft: 8
-											
-									}}>
-											{user.account.bourse}
-									</Text>
-									<Text style={{color: COLORS.white, marginTop: 3, fontWeight: "bold"}}>{user.region.devise}</Text>
-								</View>
+							<View 
+								style={{
+									justifyContent: "center",
+									alignItems: 'flex-start',
+									marginBottom: SIZES.padding * 2,
+								}}
+							>
+								<Text style={{
+									color: COLORS.white, 
+									...FONTS.h4,
+									textAlign: "center",
+									fontWeight: "bold",
+									marginTop: SIZES.padding * 2,
+									
+								}}>
+									{`${user.account.bourse} ${user.region.devise}`}
+								</Text>
+							</View>
 						</ImageBackground>
 					</View>
 
@@ -218,16 +170,16 @@ const Home = ({navigation}) => {
 	}, [modalVisible.nin])
 
 	return (
-		<KeyboardAvoidingView
+		<MainLayout
 			behavior={Platform.OS === "ios" ? "padding" : null}
-			style={{ flex: 1, marginBottom: SIZES.padding * 6, backgroundColor: COLORS.black}}
+			containerStyle={{ flex: 1, marginBottom: 30, backgroundColor: COLORS.black}}
 		>
-			{loadingIsAuthenticate && !authenticated &&
+			{loadingUser &&
 				<ActivityIndicator style={{marginTop: SIZES.padding * 2}} size={30} color={COLORS.green} />
 			}
-			{authenticated && !loadingIsAuthenticate &&
+			{Object.entries(user).length > 0 && !loadingUser &&
 				<>
-					{ data.data.nin == null 
+					{ user.nin == null 
 						? (
 							<View style={{
 								alignItems: "center",
@@ -258,137 +210,105 @@ const Home = ({navigation}) => {
 							<ScrollView showsVerticalScrollIndicator={false} >
 
 								{/* header */}
-								<RenderHeader user={data.data}/>
+								<RenderHeader user={user}/>
 
 								{/* sent and request money */}
-								<View style={[style.section, {paddingVertical: SIZES.padding * 1.2}]}>
+								<View style={[style.section, {
+									paddingVertical: SIZES.padding,
+								}]}>
 									<Text style={[
 										style.title, 
 										{
 											paddingHorizontal: SIZES.padding * 1.2
 										}
 									]}>
-										Envoie et demande d'argent
+										Transferez de l'argent
 									</Text>
-									<View style={{paddingLeft: SIZES.padding}}>
-										<FlatList
-											keyExtractor={item => (item.id)}
-											horizontal
-											showsHorizontalScrollIndicator={false}
-											data={lists}
-											renderItem={({item, index}) => {
-												return (
-													<View style={{
-														marginRight: 10,
-														justifyContent: "center"
-													}}>
-														{index === lists.length - 1
-														? (
-															<View style={{
-																width: 65,
-																justifyContent: "center",
-																alignItems: "center",
-															}}>
-																<TouchableOpacity style={{
-																	width: 62,
-																	height: 62,
+									<FlatList
+										keyExtractor={item => (item.id)}
+										horizontal
+										showsHorizontalScrollIndicator={false}
+										data={lists}
+										renderItem={({item, index}) => {
+											return (
+												<View style={{
+													marginRight: 5,
+													justifyContent: "center"
+												}}>
+													{index === lists.length - 1
+													? (
+														<View style={{
+															width: 65,
+															justifyContent: "center",
+															alignItems: "center",
+														}}>
+															<TouchableOpacity 
+																style={{
+																	width: 55,
+																	height: 55,
 																	justifyContent: "center",
 																	alignItems: "center",
 																	borderRadius: SIZES.radius,	
 																	backgroundColor: COLORS.green
-																}}>
-																	<Image resizeMode="contain" style={{width: 30, tintColor: COLORS.white}} source={icons.all} />
-																</TouchableOpacity>
-															</View>
+																}}
+																onPress={() => navigation.navigate("UserList")}
+															>
+																<Image resizeMode="contain" style={{width: 30, tintColor: COLORS.white}} source={icons.all} />
+															</TouchableOpacity>
+														</View>
 
-														) 
-														: (
+													) 
+													: (
+														<TouchableOpacity 
+															style={{
+																width: 90,
+																justifyContent: "center",
+																alignItems: "center"
+															}}
+															onPress={() => setModalVisible(m => ({...m, password: true}))}
+														>
 															<View 
 																style={{
-																	width: 190,
-																	height: 240,
+																	width: 60,
+																	height: 60,
+																	borderRadius: 999,
+																	justifyContent: "flex-end",
 																	alignItems: "center",
-																	backgroundColor: COLORS.hideWhite,
-																	padding: 8,
-																	borderRadius: 8
-																	
+																	backgroundColor: COLORS.white,
 																}}
 															>
-																<View 
+																<Image 
+																	resizeMode="contain" 
 																	style={{
-																		width: "100%",
-																		height: "40%",
-																		backgroundColor: COLORS.lightBlue,
-																		marginBottom: SIZES.padding * 2,
-																		borderRadius: 8
-																	}}
-																>
-																	<Image 
-																		resizeMode="contain" 
-																		style={{
-																			width: "100%", 
-																			height: "100%", 
-																			tintColor: COLORS.gray
-																		}} 
-																		source={icons.user} 
-																	/>
-																</View>
-																<View style={{
-																	width: "100%",
-																	height: "54%",
-																	alignItems: "center",
-																}}>
-																	<Text style={{
-																		color: COLORS.white,
-																		fontSize: SIZES.padding * 1.6, 
-																		textAlign: "center",
-																		marginBottom: 12
-																	}}>
-																		{item.nom}  {item.prenom.toUpperCase()}
-																	</Text>
-																	<View style={{
-																		flex: 1,
-																		width: "100%", 
-																		flexDirection: "row",
-																		position: "absolute",
-																		bottom: 7
-																	}}>
-																		<TouchableOpacity 
-																			style={
-																				[style.btn, {
-																						borderColor: COLORS.green,
-																						borderWidth: 1
-																				}]
-																			}
-																		onPress={() => navigation.navigate('RequestMoney')}
-																		>
-																			<Text style={[style.btn_content, {color: COLORS.green}]}>Demander</Text>
-																		</TouchableOpacity>
-
-																		<TouchableOpacity 
-																			style={[style.btn, {
-																				backgroundColor: COLORS.green,
-																				marginLeft: 6
-																			}]
-																		}
-																		onPress={() => {
-																			setPayee(item.id)
-																			setTelephone(item.telephone)
-																			setModalVisible(m => ({...m, password: true}))}
-																		}
-																		>
-																			<Text style={[style.btn_content, {color: COLORS.white}]}>Envoyer</Text>
-																		</TouchableOpacity>
-																	</View>
-																</View>
+																		width: "80%", 
+																		height: "80%", 
+																		tintColor: COLORS.gray
+																	}} 
+																	source={icons.user} 
+																/>
 															</View>
-														)}
-													</View>
-												)
-											}}
-										>
-										</FlatList>
-									</View>
+															<Text style={{
+																color: COLORS.white,
+																fontSize: 14, 
+																textAlign: "center",
+															}}>
+																{substrReplace(item.nom, '...', 8)}
+															</Text>
+															<Text 
+																style={{
+																	color: COLORS.white,
+																	fontSize: 14, 
+																	textAlign: "center",
+																}}
+															>
+																{substrReplace(item.prenom, '...', 8)}
+															</Text>
+														</TouchableOpacity>
+													)}
+												</View>
+											)
+										}}
+									/>									
 								</View>
 
 								{/* recent activity */}
@@ -397,7 +317,8 @@ const Home = ({navigation}) => {
 										paddingVertical: SIZES.padding * 1.2, 
 										paddingHorizontal: SIZES.padding * 2,  
 										marginHorizontal: 12,
-										backgroundColor: COLORS.hideWhite
+										backgroundColor: COLORS.hideWhite,
+										shadowColor: "#000",
 									}
 								]}>
 									<Text style={{color: COLORS.green, fontSize: SIZES.padding * 2, marginBottom: SIZES.padding * 1.2}}>Activité récente</Text>
@@ -417,7 +338,7 @@ const Home = ({navigation}) => {
 								{/* groupe de tontine */}
 								<View style={[style.section, {padding: SIZES.padding * 1.2}]}>
 									<Text style={[style.title]}>Groupe de tontine</Text>
-									<View>
+									{/*<View>
 										<FlatList
 											keyExtractor={item => (item.id)}
 											horizontal
@@ -479,15 +400,16 @@ const Home = ({navigation}) => {
 											}}
 										>
 										</FlatList>
-									</View>
+									</View> 
+									*/}
 								</View>
 
 								{/* service */}
 								<View style={[style.section, {padding: SIZES.padding * 1.4}]}>
 									<Text style={[style.title]}>Services</Text>
 									
-									<View>
-										
+									<View style={{}}>
+										<Text>Salut</Text>
 									</View>
 								</View>
 
@@ -506,13 +428,13 @@ const Home = ({navigation}) => {
 				}}
 
 				nextAction={() => navigation.navigate('SentMoney', {
-					currentUser: data.data.id,
+					currentUser: user.id,
 					payee: payee,
 					telephone: telephone
 				})}
 			/>
 			
-		</KeyboardAvoidingView>
+		</MainLayout>
 	)
 }
 
@@ -542,7 +464,7 @@ const style = StyleSheet.create({
 	},
 
 	title: {
-		...FONTS.h1,
+		...FONTS.h2,
 		marginBottom: SIZES.padding * 2.4,
 		color: COLORS.white
 	},
@@ -568,4 +490,11 @@ const style = StyleSheet.create({
 	}
 })
 
-export default Home
+export default connect(
+	state => ({
+		userData: currentUserSelector(state)
+	}),
+	dispatch => ({
+		getCurrentUser: () => dispatch(getCurrentUserAction())
+	})
+)(Home)

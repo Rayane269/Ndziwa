@@ -18,4 +18,11 @@ class UserController extends Controller {
     public function me(Request $request) {
         return new UserResource($request->user());
     }
+
+    /**
+     * Recuperer tous les utilisateurs
+     */
+    public function index() {
+        return new UserCollection(User::all());
+    }
 }

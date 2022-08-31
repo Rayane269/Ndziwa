@@ -4,7 +4,15 @@ import { RequestMoney, SentMoney } from './transactions'
 import { Settings } from './settings'
 import { SignIn } from './auth'
 import History from "./History"
-import Tontine from "./Tontine"
+import { 
+    ShowTontines, 
+    AboutTontineInProgress, 
+    AboutTontineWaiting, 
+    SendInvitation,
+    DefineObjectif
+} from "./tontine"
+import MainLayout from "./MainLayout"
+
 
 export {
     FirstStep, 
@@ -14,8 +22,13 @@ export {
     SignIn,
     Settings,
     History,
-    Tontine,
     SentMoney,
     RequestMoney,
     Home,
+    AboutTontineInProgress,
+    AboutTontineWaiting,
+    ShowTontines,
+    MainLayout,
+    SendInvitation,
+    DefineObjectif
 }

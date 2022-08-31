@@ -7,14 +7,13 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\Register\RegisterController;
 use App\Http\Controllers\SecurityController;
+use App\Http\Controllers\Tontine\InvitationController;
+use App\Http\Controllers\Tontine\TontineController;
 use App\Http\Controllers\Transaction\DepotController;
 use App\Http\Controllers\Transaction\RequestController;
 use App\Http\Controllers\Transaction\RetraitController;
 use App\Http\Controllers\Transaction\TransfertController;
 use App\Http\Controllers\UserController;
-use App\Http\Resources\OperationResource;
-use App\Models\Operation;
-use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,13 +71,42 @@ Route::middleware('auth:sanctum')->get('/me', [UserController::class, 'me']);
 //resources
 Route::get('/regions', [RegionController::class, 'index'], 'regions');
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users', [UserController::class, 'index'], 'users');
+});
+
+Route::middleware('auth:sanctum')
+    ->group(function () {
+        Route::get('/tontines', [TontineController::class, 'index']);
+        Route::prefix('/tontine')
+        ->controller(TontineController::class)
+        ->group(function () {
+            Route::get('/{id}', 'show')->where('id', '[0-9]+');
+            Route::post('/{id}', 'remove')->where('id', '[0-9]+');
+            Route::post('/pay/{id}', 'pay')->where('id', '[0-9]+');
+            Route::post('/collect/{id}', 'collect')->where('id', '[0-9]+');
+            Route::post('/remove-member/{id}', 'removeMember')->where('id', '[0-9]+');
+            Route::prefix('/create')
+            ->group(function () {
+                Route::post('/first-step', 'defineTontineObjectif');
+                Route::post('/second-step/{id}', 'addGroupMembers')->where('id', '[0-9]+');
+                Route::post('/third-step/{id}', 'defineCollectionOrder')->where('id', '[0-9]+');
+            });
+        });
+        Route::prefix('/tontine/invitation')
+        ->controller(InvitationController::class)
+        ->group(function () {
+            Route::post('/accept/{id}', 'acceptInvitation')->where('id', '[0-9]+');
+            Route::post('/remove/{id}', 'removeInvitation')->where('id', '[0-9]+');
+        });
+    });
+
+Route::middleware('auth:sanctum')->group(function () {
     Route::get(
         '/operations/{id}', 
         [AccountOperationController::class, 'getOperationsWithAnother'], 
         'operation'
     )->where('id', '[0-9]+');
 });
-
 
 //verify sms
 Route::middleware('auth:sanctum')->post('/sms-verify', [SecurityController::class, 'smsVerify']);

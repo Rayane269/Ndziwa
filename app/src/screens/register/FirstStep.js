@@ -15,6 +15,7 @@ import { FormContext } from '../../components/Context'
 import { ButtonSubmitContext, TextFieldContext } from '../../components/Field'
 import { useJsonFetch } from '../../functions/hooks'
 import { BASE_URL } from '../../config'
+import { RenderLogo } from '../../components/Utils'
 
 const FirstStep = ({navigation}) => {
 
@@ -24,26 +25,6 @@ const FirstStep = ({navigation}) => {
 
     
     //functions
-    const RenderLogo = () => {
-        return (
-            <View
-                style={{
-                    marginTop: SIZES.padding,
-                    height: 100,
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                }}
-            >
-                <Image 
-                    source={images.wallieLogo}
-                    resizeMode="contain"
-                    style={{
-                        width: "60%",
-                    }}
-                />
-            </View>
-        )
-    }
     
     const RenderFormContext = ({defaultValue, children}) => {
         
@@ -83,7 +64,7 @@ const FirstStep = ({navigation}) => {
                 colors={[COLORS.white, COLORS.green]}
                 style={{flex: 1}}
             >
-                <ScrollView >
+                <ScrollView keyboardShouldPersistTaps="handled" >
                     <RenderLogo />
                     <RenderFormContext defaultValue={{"nom": value.nom, "prenom": value.prenom}}>
                         <TextFieldContext 

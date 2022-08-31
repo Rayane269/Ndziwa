@@ -1,0 +1,1 @@
+export const transactionModalSelector = ({tabReducer}) => tabReducer.transactionModalVisible 

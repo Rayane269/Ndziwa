@@ -35,7 +35,7 @@ const SignIn = () => {
     useEffect(() => {
         if (!authenticated) {
             is().
-            then(connected => (connected && navigation.navigate('home')))
+            then(connected => (connected && navigation.navigate('MainLayout')))
         }
     }, [])
 
@@ -98,7 +98,7 @@ const SignIn = () => {
         const response = await login(value)
         if (response !== undefined) {
             console.log('connecté')
-            navigation.navigate('home')
+            navigation.navigate('MainLayout')
         }
     }, [])
        
@@ -116,7 +116,7 @@ const SignIn = () => {
                     colors={[COLORS.white, COLORS.green]}
                     style={{flex: 1}}
                 >
-                    <ScrollView >
+                    <ScrollView keyboardShouldPersistTaps="handled" >
                         <RenderLogo />
                         <RenderFormContext defaultValue={{"telephone": value.telephone, "password": value.password}}>
                             <TextFieldContext context={FormCreateContext} name="telephone" type="phone-pad" errors={error.errors}>Téléphone</TextFieldContext>

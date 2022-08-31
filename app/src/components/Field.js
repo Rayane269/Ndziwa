@@ -41,7 +41,7 @@ const TextField = ({type="default", maxLength, multiline=false, autoFocus=false,
                 value={state.value}
                 placeholder={children} 
                 placeholderTextColor={style.color || COLORS.black}  
-                onChangeText={text => {state.setValue(text); if (errors != null) errors[name] = null}}
+                onChangeText={text => {state.setValue(s => ({...s, [name]: text})); if (errors != null) errors[name] = null}}
             />
 
             {errors && errors[name] &&
@@ -283,7 +283,7 @@ const SmsVerify = ({errors=null, onSubmit}) => {
     }, [sms])
     
     return (
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
             {errors !== null &&
                 <Text style={{color: COLORS.red, fontSize: SIZES.padding * 1.8, textAlign: "center", marginTop: SIZES.padding * 2}}>{errors.errors || errors}</Text>
             }

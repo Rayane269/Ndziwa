@@ -79,23 +79,19 @@ class RegisterController extends Controller {
      * @return void
      */
     public function thirdStep(Request $request) {
-
         $credentials = $request->validate([
             'code' => ['required']
         ]);
-
         $code = (int) $credentials['code'];
 
         if ($code !== 1234) {
             return throw new Exception(__("validation.confirmed", ["attribute" => "code"]), 403);
         }
-
         if (!$this->saveStep(['telephone_verified_at' => now()], 3)) {
             return throw new Exception(__("message.step_indefined"), 401);
         }
 
         return response()->json(['message' => __('message.success')], 201);
-       
     } 
     
     /**
@@ -149,7 +145,7 @@ class RegisterController extends Controller {
         
         $session->put(self::KEY_ONE . "lastStep", $step - 1);        
         if ($step > 1) {
-            if (!Gate::allows('next-step', $session)) {
+            if (!Gate::allows('register-next-step', $session)) {
                 return false;
             }
         }

@@ -78,54 +78,54 @@ trait TransactionTrait {
     }
 
         
-    /**
-     *  faire un transfert d'argent depuis le compte de l'utilisateur courant vers un autre compte
-     *
-     * @param  array $fields
-     * @param  string $type
-     * @return bool
-     */
-    public function makeTransfertTransaction($fields=[], $type) {
-        
-        $somme = (float) $fields['somme'];
-        $accountBeneficiaire = Compte::where('numero_compte', hash('md5', $fields['nin']))->first();
-        $accountEmetteur = $this->request->user()->compte;
+/**
+ *  faire un transfert d'argent depuis le compte de l'utilisateur courant vers un autre compte
+ *
+ * @param  array $fields
+ * @param  string $type
+ * @return bool
+ */
+public function makeTransfertTransaction($fields=[], $type) {
+		
+	$somme = (float) $fields['somme'];
+	$accountBeneficiaire = Compte::where('numero_compte', hash('md5', $fields['nin']))->first();
+	$accountEmetteur = $this->request->user()->compte;
 
-        if ($accountBeneficiaire === null) {
-            throw new TransactionException(
-                __(
-                    "message.inaccessible", 
-                    ["ressource" => "cet utilisateur"]
-                ), 
-                404
-            );
-        }
+	if ($accountBeneficiaire === null) {
+		throw new TransactionException(
+			__(
+				"message.inaccessible", 
+				["ressource" => "cet utilisateur"]
+			), 
+			404
+		);
+	}
 
-        if ($accountBeneficiaire->id === $accountEmetteur->id) {
-            throw new TransactionException(__("message.error"));
-        }
+	if ($accountBeneficiaire->id === $accountEmetteur->id) {
+		throw new TransactionException(__("message.error"));
+	}
 
-        if (!$accountBeneficiaire->activated || !$accountEmetteur->activated) {
-            throw new TransactionException(__("message.not_activated"), 403);
-        }
-        
-        if ($accountEmetteur->bourse <  $somme) {
-            throw new TransactionException(__("message.insufficient_amout"), 403);
-        }
+	if (!$accountBeneficiaire->activated || !$accountEmetteur->activated) {
+		throw new TransactionException(__("message.not_activated"), 403);
+	}
+	
+	if ($accountEmetteur->bourse <  $somme) {
+		throw new TransactionException(__("message.insufficient_amout"), 403);
+	}
 
-        $accountEmetteur->bourse -= $somme;
-        $accountBeneficiaire->bourse += $somme;
-        $accountBeneficiaire->save();
+	$accountEmetteur->bourse -= $somme;
+	$accountBeneficiaire->bourse += $somme;
+	$accountBeneficiaire->save();
 
-        // On enregistre l'opération
-        return $this->registerTransaction(
-            $type, 
-            $accountEmetteur,
-            $accountBeneficiaire->user, 
-            $somme, 
-            !empty($fields['libelle']) ? $fields['libelle'] :  __("message.transfer", ['somme' => $somme]) 
-        );
-    }
+	// On enregistre l'opération
+	return $this->registerTransaction(
+		$type, 
+		$accountEmetteur,
+		$accountBeneficiaire->user, 
+		$somme, 
+		!empty($fields['libelle']) ? $fields['libelle'] :  __("message.transfer", ['somme' => $somme]) 
+	);
+}
     
     /**
      * makeDepositOrWithdrawalTransaction

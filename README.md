@@ -1,13 +1,13 @@
 # NDZIWA
 
-Dépôt pour mon projet de soutenance pour valider mon DUT. Il s'agit d'un portefeuille électronique, qui va prendre en charge le dépôt et le retrait d'argent, un moyen de transfert d'argent et un systeme de <a rel="license" href="https://fr.wikipedia.org/wiki/Tontine#Fonctionnement">tontine</a>
+Projet de soutenance pour valider mon DUT. Il s'agit d'un portefeuille de monnaie électronique, qui va prendre en charge le dépôt et le retrait d'argent, un moyen de transfert d'argent et un systeme de <a rel="license" href="https://fr.wikipedia.org/wiki/Tontine#Fonctionnement">tontine</a>
 
 ## prérequis
 
 - [Avoir composer installé et PHP ^8.0.0](https://getcomposer.org/download/)
 - [Node js 12.22.0 ou plus ](https://nodejs.org/en/download/)
 - [CLI react native](https://reactnative.dev/docs/environment-setup)
-- [Postman ou autre (pour tester l'api)](https://learning.postman.com/docs/getting-started/installation-and-updates/) 
+- [Postman (pour tester l'api)](https://learning.postman.com/docs/getting-started/installation-and-updates/) ou autre
 
 Pour notre projet, nous l'avons organisé en trois parties :
 
@@ -27,8 +27,8 @@ Pour notre projet, nous l'avons organisé en trois parties :
 
 ### Objectif-api
 
-l'objectif de cette partie est de fournir les differents endpoint pour alimenter le reste de l'application.
-Il va fournir les endpoints pour notre application mobile mais aussi pour l'administration.
+l'objectif de cette partie est de fournir les differents endpoints pour alimenter le reste de l'application.
+Il s'agit d'un API Rest qui sera consomé par une application mobile et une application web pour l'administration.
 
 - Nous utilisons Laravel pour le développement de l'api 
 

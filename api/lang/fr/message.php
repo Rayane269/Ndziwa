@@ -14,5 +14,8 @@ return [
     'withdrawal' => 'Vous avez retirait une somme de :somme sur votre compte',
     'insufficient_amout' => "Vous ne disposez pas une telle somme dans votre compte",
     'not_activated' => 'Votre :attribute n\'est pas activé',
-    'inaccessible' => ':ressource est inaccessible' 
+    'invitation' => 'Une invitation n\'a pas été accepté',
+    'not_paid' => 'Un membre n\'a pas encore payé',
+    'inaccessible' => ':ressource est inaccessible',
+    'unauthorize' => 'Vous n\'êtes pas authorisé'
 ];

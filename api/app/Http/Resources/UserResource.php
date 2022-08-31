@@ -17,12 +17,13 @@ class UserResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "fullName" => $this->nom . ' ' . $this->prenom,
+            "nom" => $this->nom,
+            "prenom" => $this->prenom,
             "avatar" => $this->avatar,
             "nin" => $this->nin,
             "type" => $this->type,
             "telephone" => $this->telephone,
-            "roles" => $this->role,
+            "roles" => $this->roles,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "region" => Region::find($this->region_id),

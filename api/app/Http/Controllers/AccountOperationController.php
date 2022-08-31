@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\Operation\OperationCollection;
 use App\Models\Operation;
 
+/**
+ * AccountOperationController recuperation des relevets de compte 
+ */
 class AccountOperationController extends Controller {
 
 
@@ -20,7 +23,7 @@ class AccountOperationController extends Controller {
                 ['beneficiaire', '=', $request->user()->id]
             ])->get()
         ;
-        //dd($operations);
+        
         return new OperationCollection($operations);
     }
 

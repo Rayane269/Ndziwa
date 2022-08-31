@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Group;
 use App\Models\User;
+use App\Policies\GroupPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Session\Session;
@@ -18,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Group::class => GroupPolicy::class
     ];
 
     /**
@@ -34,9 +37,13 @@ class AuthServiceProvider extends ServiceProvider
             fn (User $user) => in_array('ROLE_ADMIN', json_decode($user->roles))
         );
 
-        Gate::define('next-step', function (?User $user, Session $session) {
+        Gate::define('register-next-step', function (?User $user, Session $session) {
             $register = $session->get('register', []);
             return key_exists($register['lastStep'], $session->get('register.steps') ?? []);
+        });
+
+        Gate::define('transaction-next-step', function (User $user, Session $session) {
+            $register = $session->get('transaction', []);
         });
     }
 }

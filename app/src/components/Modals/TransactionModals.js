@@ -1,6 +1,6 @@
 import React, {useState} from "react"
-import { StyleSheet, Modal, View, Image, TouchableOpacity } from "react-native"
-import { COLORS, FONTS, icons, images, SIZES } from "../../../constants"
+import { StyleSheet, View, Image, TouchableOpacity, Animated } from "react-native"
+import { COLORS, icons, SIZES } from "../../../constants"
 import { TextField } from "../Field"
 
 
@@ -22,12 +22,11 @@ export const TransactionModal = ({label, step, maxLength, multiline, name, modal
     const [value, setValue] = useState("")
     
     return (
-        <View
+        <Animated.View
             style={{
                 position: "absolute",
                 bottom: 0,
                 width: "100%",
-                backgroundColor: "green"
             }}
         >
             {modal.visible &&
@@ -49,7 +48,7 @@ export const TransactionModal = ({label, step, maxLength, multiline, name, modal
                                     height: 35,
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    marginBottom: 8,
+                                    marginBottom: 5,
                                     borderRadius: 999,
                                 }}
                                 onPress={() => modal.prev()}
@@ -68,7 +67,7 @@ export const TransactionModal = ({label, step, maxLength, multiline, name, modal
                         <TextField
                             name={name}
                             style={{
-                                color: COLORS.gray, 
+                                color: COLORS.white, 
                                 paddingHorizontal: step === 2 ? 10 : 15, 
                                 fontSize: SIZES.padding * 1.7,
                                 width: "85%",
@@ -88,7 +87,7 @@ export const TransactionModal = ({label, step, maxLength, multiline, name, modal
                         style={{
                             width: 44,
                             height: 44,
-                            backgroundColor: value !== '' || step === 2 ? COLORS.green : COLORS.black,
+                            backgroundColor: value !== '' || step === 2 ? COLORS.black : COLORS.hideBlack,
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: 999  
@@ -108,15 +107,16 @@ export const TransactionModal = ({label, step, maxLength, multiline, name, modal
                     </TouchableOpacity>
                 </View>
             }
-        </View>
+        </Animated.View>
     )
 }
 
 
 const styles = StyleSheet.create({
     field_content: {
-        backgroundColor: COLORS.black,
+        backgroundColor: COLORS.green,
         width: "100%",
+        height: 55,
         position: "absolute",
         bottom: 0,
         alignItems: "flex-end",
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
 
     field: {
-        backgroundColor: COLORS.hideWhite,
+        backgroundColor: COLORS.black,
         width: "83%",
         borderRadius: SIZES.radius,
         justifyContent: "center",

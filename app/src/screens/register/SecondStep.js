@@ -146,7 +146,7 @@ const SecondStep = ({navigation}) => {
                 colors={[COLORS.white, COLORS.green]}
                 style={{flex: 1}}
             >
-                <ScrollView >
+                <ScrollView keyboardShouldPersistTaps="handled" >
                     <LastLink navigation={navigation} link="inscription_step_1" />
                     <RenderFormContext defaultValue={{"region_id": selected.id, "telephone": value.telephone}}>
                         <SelectField

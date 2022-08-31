@@ -53,7 +53,7 @@ const FourthStep = ({navigation}) => {
         })
 
         if (response !== undefined) {
-            navigation.navigate('home')
+            navigation.navigate('SignIn')
         }
         
     }, [])
@@ -68,7 +68,7 @@ const FourthStep = ({navigation}) => {
                 colors={[COLORS.white, COLORS.green]}
                 style={{flex: 1}}
             >
-                <ScrollView >
+                <ScrollView keyboardShouldPersistTaps="handled">
                     <LastLink navigation={navigation} link="inscription_step_3" />
                     <RenderFormContext defaultValue={{"password": value.password, "confirm_password": null}}>
                         <PasswordFieldContext 

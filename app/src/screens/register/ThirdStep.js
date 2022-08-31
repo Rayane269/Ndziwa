@@ -27,8 +27,6 @@ const ThirdStep = ({navigation}) => {
         )
     })
 
-    log()
-
     //handler
     const handleSubmit = useCallback( async (value) => {
         const response = await fetch(null, {

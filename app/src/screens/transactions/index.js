@@ -1,5 +1,5 @@
-import RequestMoney from "./RequestMoney"
-import SentMoney from "./SentMoney"
+import RequestMoney from "./UserRequestMoney"
+import SentMoney from "./UserSentMoney"
 
 
 
